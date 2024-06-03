@@ -8,7 +8,6 @@ public class Users {
     private String upassword;//用户密码
     private String uquestion;//密保的问题
     private String uanswer;//密保的答案
-    private boolean identity;//是否为管理员
     private String true_name;//真名
     private String gender;//性别
     private String tel;//手机号
@@ -25,13 +24,12 @@ public class Users {
     public Users() {
     }
 
-    public Users(int uid, String uname, String upassword, String uquestion, String uanswer, boolean identity, String true_name, String gender, String tel, String e_mail, String career, String interest, String address, double money, Date registration_time) {
+    public Users(int uid, String uname, String upassword, String uquestion, String uanswer, String true_name, String gender, String tel, String e_mail, String career, String interest, String address, double money, Date registration_time) {
         this.uid = uid;
         this.uname = uname;
         this.upassword = upassword;
         this.uquestion = uquestion;
         this.uanswer = uanswer;
-        this.identity = identity;
         this.true_name = true_name;
         this.gender = gender;
         this.tel = tel;
@@ -83,13 +81,6 @@ public class Users {
         this.uanswer = uanswer;
     }
 
-    public boolean isIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(boolean identity) {
-        this.identity = identity;
-    }
 
     public String getTrue_name() {
         return true_name;

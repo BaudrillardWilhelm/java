@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+/*
+ * 自定义的样式
+ */
+body
+{
+background-image: url("../images/backgroundRegister.jpeg");
+    background-repeat: repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}

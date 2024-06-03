@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                usersList.add(new Users(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getBoolean(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13),rs.getInt(14),rs.getTime(15)));
+                usersList.add(new Users(rs.getInt("uid"),rs.getString("uname"),rs.getString("upassword"),rs.getString("uquestion"),rs.getString("uanswer"),rs.getString("true_name"),rs.getString("gender"),rs.getString("tel"),rs.getString("e_mail"),rs.getString("career"),rs.getString("interest"),rs.getString("address"),rs.getDouble("money"),rs.getDate("registration_time")));
             }
             return usersList;
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Users(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getBoolean(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13),rs.getInt(14),rs.getTime(15));
+                return new Users(rs.getInt("uid"),rs.getString("uname"),rs.getString("upassword"),rs.getString("uquestion"),rs.getString("uanswer"),rs.getString("true_name"),rs.getString("gender"),rs.getString("tel"),rs.getString("e_mail"),rs.getString("career"),rs.getString("interest"),rs.getString("address"),rs.getDouble("money"),rs.getDate("registration_time"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,27 +83,106 @@ public class UserDaoImpl implements UserDao {
         }
         return false;
     }
-    public boolean ifPeopleIsTheAdministratorsByUnameAndUpassword (String uname,String upassword)//判断这个用户是否为管理员且是否存在
-    {
+
+    @Override
+    public Users GetInformationByNameAndPassword(String uname, String upassword) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-
+        Users Back = null;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Users where uname=? and upassword=? and identity=1");
+            ps = con.prepareStatement("select * from Users where uname=? and upassword=?");
             ps.setString(1,uname);
             ps.setString(2,upassword);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                return  true;
+                Back = new Users(rs.getInt("uid"),rs.getString("uname"),rs.getString("upassword"),rs.getString("uquestion"),rs.getString("uanswer"),rs.getString("true_name"),rs.getString("gender"),rs.getString("tel"),rs.getString("e_mail"),rs.getString("career"),rs.getString("interest"),rs.getString("address"),rs.getDouble("money"),rs.getDate("registration_time"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally{
-            DatabaseUtil.close(rs,ps,con);
         }
-        return false;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+
+            DatabaseUtil.close(rs,ps,con);
+            return Back;
+        }
+    }
+
+    @Override
+    public String GetQuestionByPhone(String phone) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String  Back = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select uquestion  from Users where tel=?");
+            ps.setString(1,phone);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Back = new String(rs.getString(1));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            DatabaseUtil.close(rs,ps,con);
+            return Back;
+        }
+    }
+
+    @Override
+    public boolean AnswerJudge(String question,String answer) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean back = false;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select *  from Users where uquestion=? and uanswer=?");
+            ps.setString(1,question);
+            ps.setString(2,answer);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+               back = true;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            DatabaseUtil.close(rs,ps,con);
+            return back;
+        }
+    }
+
+    @Override
+    public String GetPasswordByAnswerByQuestion(String answer, String question) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String back = "gg";
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select upassword  from Users where uquestion=? and uanswer=?");
+            ps.setString(1,question);
+            ps.setString(2,answer);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                back = rs.getString(1);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            DatabaseUtil.close(rs,ps,con);
+            return back;
+        }
     }
 }
