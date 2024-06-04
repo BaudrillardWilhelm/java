@@ -5,7 +5,7 @@
  */
 body
 {
-background-image: url("../images/backgroundRegister.jpeg");
+    background-image: url("../images/backGroundLogin.jpg");
     background-repeat: repeat;
     background-position: center center;
     background-attachment: fixed;
