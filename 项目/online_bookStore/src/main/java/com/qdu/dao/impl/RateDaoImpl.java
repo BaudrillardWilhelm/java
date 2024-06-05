@@ -205,7 +205,31 @@ public class RateDaoImpl implements RateDao {
         }
     }
 
-    public Rate getOneRate(int uid, int uidRateId) {
+    public Rate findRateById(int uidRateId,int uid) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Rate rate = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select * from rate where uid = ? and uidRateId = ?");
+            ps.setInt(1, uid); // 将参数 uid 设置为第一个问号的值
+            ps.setInt(2,uidRateId);
+            rs = ps.executeQuery();
+
+            rate = new Rate(
+                    rs.getInt(1),      // 假设第一列是uid
+                    rs.getInt(2),      // 假设第二列是bid
+                    rs.getDouble(3),  // 假设第十列是star
+                    rs.getString(4),   // 假设第五列是info
+                    rs.getInt(5)       // 假设第九列是uidRateId
+            );
+            return rate;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            DatabaseUtil.close(rs,ps,con);
+        }
         return null;
     }
 }
