@@ -37,7 +37,19 @@ public class Order {
         this.book_num = book_num;
         this.sum_price = sum_price;
     }
-
+    public Order(int uid, String receiver_name, String buyer_address, String buyer_tel, String postal_code, Date order_date, int order_type, int bid, String b_name, int book_num, double sum_price) {
+        this.uid = uid;
+        this.receiver_name = receiver_name;
+        this.buyer_address = buyer_address;
+        this.buyer_tel = buyer_tel;
+        this.postal_code = postal_code;
+        this.order_date = order_date;
+        this.order_type = order_type;
+        this.bid = bid;
+        this.b_name = b_name;
+        this.book_num = book_num;
+        this.sum_price = sum_price;
+    }
     public int getBid() {
         return bid;
     }

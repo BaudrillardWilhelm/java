@@ -38,7 +38,7 @@
             </ul>
 
             <br>
-            <a href="cart.jsp" class="cartImg">
+            <a href="ManageCart.jsp" class="cartImg">
                 查看购物车<img src="images/cart.png" alt="购物车"/>
             </a>
             <a href="los" class="logout">

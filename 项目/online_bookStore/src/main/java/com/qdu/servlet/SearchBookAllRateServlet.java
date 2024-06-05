@@ -4,8 +4,6 @@ import com.qdu.dao.impl.Book_infoDaoImpl;
 import com.qdu.dao.impl.RateDaoImpl;
 import com.qdu.model.Book_info;
 import com.qdu.model.Rate;
-import com.qdu.service.DiaryService;
-import com.qdu.service.impl.DiaryServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

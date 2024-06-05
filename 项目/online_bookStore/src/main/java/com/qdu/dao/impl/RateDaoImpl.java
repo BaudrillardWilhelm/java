@@ -205,4 +205,7 @@ public class RateDaoImpl implements RateDao {
         }
     }
 
+    public Rate getOneRate(int uid, int uidRateId) {
+        return null;
+    }
 }
