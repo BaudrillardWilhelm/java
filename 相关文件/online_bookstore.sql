@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 01/06/2024 14:14:19
+ Date: 05/06/2024 09:52:48
 */
 
 SET NAMES utf8mb4;
@@ -138,13 +138,13 @@ CREATE TABLE `users`  (
   `true_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `gender` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `e-mail` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `Email` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `career` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `interest` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `address` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `money` decimal(10, 2) NOT NULL,
   `registration_time` date NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
