@@ -45,7 +45,8 @@ function CheckPhone()
                 if(response.Have == true)
                 {
                     alert("手机号已经被注册");
-                    userTel.value.clear();
+                    let empty = document.getElementById("userTel");
+                    empty.value = "";
                 }
                 else
                 {
