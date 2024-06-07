@@ -5,6 +5,7 @@ import com.qdu.model.Users;
 import com.qdu.util.DatabaseUtil;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public class UserDaoImpl implements UserDao {
         }
         return null;
     }
+
+
     public boolean haveThePeopleByUnameAndUpassword(String uname,String upassword)//根据用户名和密码判断用户是否存在
     {
         Connection con = null;
@@ -183,6 +186,37 @@ public class UserDaoImpl implements UserDao {
         finally{
             DatabaseUtil.close(rs,ps,con);
             return back;
+        }
+    }
+
+    public void updateUser(Users loggedUser) {
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("UPDATE Users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, e_mail=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
+
+            ps.setString(1, loggedUser.getUname());
+            ps.setString(2, loggedUser.getUpassword());
+            ps.setString(3, loggedUser.getUquestion());
+            ps.setString(4, loggedUser.getUanswer());
+            ps.setString(5, loggedUser.getTrue_name());
+            ps.setString(6, loggedUser.getGender());
+            ps.setString(7, loggedUser.getTel());
+            ps.setString(8, loggedUser.getE_mail());
+            ps.setString(9, loggedUser.getCareer());
+            ps.setString(10, loggedUser.getInterest());
+            ps.setString(11, loggedUser.getAddress());
+            ps.setDouble(12, loggedUser.getMoney());
+            ps.setDate(13, (Date) loggedUser.getRegistration_time());
+            ps.setInt(14, loggedUser.getUid());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(null, ps, con);
         }
     }
 }

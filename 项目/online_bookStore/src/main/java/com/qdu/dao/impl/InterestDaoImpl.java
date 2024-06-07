@@ -17,32 +17,63 @@ public class InterestDaoImpl implements InterestDao {
     public InterestDaoImpl() {
     }
 
+    /**
+     *
+     * @param uid
+     * @return这个函数估计又是脑子不清醒的时候写的
+     */
     @Override
-    public Interest findInterestById(int uid) {
+    public List<Interest> findInterestListByUid(int uid) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Interest interest=null;
+        List<Interest> list=null;
         try {
             con = DatabaseUtil.getConnection();
             ps = con.prepareStatement("select * from interest where uid = ?");
             ps.setInt(1,uid);
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                interest = new Interest(
+            while (rs.next()) {
+                Interest interest = new Interest(
                         rs.getInt(1),      // 假设列名是"interest_id"，对应于uid
                         rs.getString(2), // 假设列名是"type_name_column"，对应于type_name
                         rs.getInt(3)
                 );
+                list.add(interest);
             }
-            return interest;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         } finally{
             DatabaseUtil.close(rs,ps,con);
         }
         return null;
+    }
+
+    public String  findInterestChineseNameByUid(int uid,int type_id)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String ChineseName = "";
+        try{
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select * from interest where uid = ? and type_id = ?");
+            ps.setInt(1,uid);
+            ps.setInt(2,type_id);
+            rs = ps.executeQuery();
+            if(rs.next())
+            {
+                ChineseName = rs.getString(1);
+                return ChineseName;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            DatabaseUtil.close(rs,ps,con);
+        }
+        return "null";
     }
 
 

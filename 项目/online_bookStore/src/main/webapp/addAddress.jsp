@@ -45,7 +45,7 @@
                 success: function(response) {
                     if (response == 1) {
                         alert('地址添加成功');
-                        window.location.href = 'orderConfirm.jsp';
+                        window.location.href = 'OneOrderConfirm.jsp';
                     } else if (response == 0) {
                         alert('地址添加失败');
                     } else if (response == -1) {

@@ -44,6 +44,7 @@
             <a href="los" class="logout">
                 退出登录
             </a>
+            <a href="Collection.jsp">我的收藏</a>
             <br>
             <br>
         </div>
