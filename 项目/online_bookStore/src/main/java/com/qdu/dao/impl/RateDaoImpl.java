@@ -81,6 +81,7 @@ public class RateDaoImpl implements RateDao {
             DatabaseUtil.close(rs,ps,con);
         }
         return null;
+
     }
 
     @Override
