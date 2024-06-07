@@ -90,6 +90,7 @@ public class AddManyOrdersServlet extends HttpServlet {
             // 扣除用户余额
             double newBalance = loggedUser.getMoney() - totalSum;
             loggedUser.setMoney(newBalance);
+
             usersDao.updateUser(loggedUser);  // 更新用户余额
 
             // 清空购物车
