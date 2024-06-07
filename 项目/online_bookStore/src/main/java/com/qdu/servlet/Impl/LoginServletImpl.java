@@ -32,8 +32,8 @@ public class LoginServletImpl extends HttpServlet implements LoginServlet {
         {
             resultMap.put("isLogin",true);
             Login_if.getInstance().setIfLogin(true);
-            HttpSession session = request.getSession();
-            session.setAttribute("loggedUser",uo.GetInformationByNameAndPassword(uname,pwd));
+            //HttpSession session = request.getSession();
+            //session.setAttribute("loggedUser",uo.GetInformationByNameAndPassword(uname,pwd));
         }
         else
         {
