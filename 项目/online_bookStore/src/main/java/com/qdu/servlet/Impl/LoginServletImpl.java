@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.oreilly.servlet.MultipartRequest;
 import com.qdu.dao.impl.UserDaoImpl;
 import com.qdu.model.Login_if;
+import com.qdu.model.lyyAjax;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class LoginServletImpl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String save_directory = "项目/online_bookStore/src/main/webapp/ShowUserImage";
+        String save_directory = lyyAjax.getInstance().getUrl();
         MultipartRequest mreq = new MultipartRequest(request,save_directory,1024*1024*10,"UTF-8");
         String uname=mreq.getParameter("name");
         String pwd=mreq.getParameter("password");

@@ -234,4 +234,35 @@ public class UserDaoImpl implements UserDao {
             return back;
         }
     }
+
+    public void updateUser(Users loggedUser) {
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("UPDATE Users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, e_mail=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
+
+            ps.setString(1, loggedUser.getUname());
+            ps.setString(2, loggedUser.getUpassword());
+            ps.setString(3, loggedUser.getUquestion());
+            ps.setString(4, loggedUser.getUanswer());
+            ps.setString(5, loggedUser.getTrue_name());
+            ps.setString(6, loggedUser.getGender());
+            ps.setString(7, loggedUser.getTel());
+            ps.setString(8, loggedUser.getE_mail());
+            ps.setString(9, loggedUser.getCareer());
+            ps.setString(10, loggedUser.getInterest());
+            ps.setString(11, loggedUser.getAddress());
+            ps.setDouble(12, loggedUser.getMoney());
+            ps.setDate(13, (java.sql.Date)loggedUser.getRegistration_time());
+            ps.setInt(14, loggedUser.getUid());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(null, ps, con);
+        }
+    }
 }

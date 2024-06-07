@@ -19,19 +19,20 @@ import java.io.IOException;
 @WebServlet("/updateCartServlet")
 public class UpdateCartServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String bid = request.getParameter("bid");
-        String newQtyStr = request.getParameter("newQty");
-
-        if (bid != null && newQtyStr != null) {
+//        String bid = request.getParameter("bid");
+        int bid = Integer.parseInt(request.getParameter("bid"));
+        int newQty = Integer.parseInt(request.getParameter("newQty"));
+        Users loggedUser = (Users) request.getSession().getAttribute("LoggedUser");
+        if (bid != 0 && newQty != 0) {
             try {
-                int newQty = Integer.parseInt(newQtyStr);
                 ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
-                ShoppingCart cart = cartDao.getCartByBid(Integer.parseInt(bid));
+                int uid = loggedUser.getUid();
+                ShoppingCart cart = cartDao.getShoppingCart(uid,bid);
 
                 if (cart != null) {
                     cart.setBookNum(newQty);
                     cart.setSum(cart.getPrice() * newQty);
-                    cartDao.updateCart(cart);
+                    cartDao.updateShoppingCart(cart);
                     response.getWriter().write("{\"status\": \"success\"}");
                 } else {
                     response.getWriter().write("{\"status\": \"error\"}");
