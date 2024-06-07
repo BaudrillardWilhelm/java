@@ -1,6 +1,10 @@
 package com.qdu.servlet;
 
+import com.qdu.dao.impl.Book_infoDaoImpl;
 import com.qdu.dao.impl.CollectionDaoImpl;
+import com.qdu.dao.impl.InterestDaoImpl;
+import com.qdu.dao.impl.UserDaoImpl;
+import com.qdu.model.Book_info;
 import com.qdu.model.Collection;
 import com.qdu.model.Users;
 
@@ -11,26 +15,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.Date;
 
+
+/**
+ * 这个前置是BookInfo.jsp
+ * 用的ajax，返回操作是否成功
+ * 返回0是没找到操作
+ * 返回-1是操作失败
+ * 从session中拿loggedUser
+ * 从  前置 拿：action，操作
+ *            bid
+ *
+ */
 @WebServlet("/collection")
 public class CollectionServlet extends HttpServlet {
 
     private CollectionDaoImpl collectionDaoImpl = new CollectionDaoImpl();
-
+    Book_infoDaoImpl bookInfoDao = new Book_infoDaoImpl();
+    InterestDaoImpl interestDao = new InterestDaoImpl();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
         Users loggedUser = (Users) req.getSession().getAttribute("LoggedUser");
         int result = 0;
 
+        String action = req.getParameter("action");
+        int bid = Integer.parseInt(req.getParameter("bid"));
         if (loggedUser != null) {
+
             int uid = loggedUser.getUid();
-            int bid = Integer.parseInt(req.getParameter("bid"));
+            Date currentDate = new Date(); // 获取当前日期和时间
+            Book_info book = bookInfoDao.findBookById(bid);
+            //我这里是想要通过interestDao获得对应interest的中文名，用String装起来
+            int TypeId = book.getTypeId();;
+            String bookType = interestDao.findInterestChineseNameByUid(uid,TypeId);
 
             switch (action) {
                 case "collect":
-                    Collection collection = new Collection(uid, bid, req.getParameter("book_name"), null, req.getParameter("book_type"));
+                    Collection collection = new Collection(uid, bid, book.getBName(), currentDate,bookType );
                     result = collectionDaoImpl.addCollection(collection);
                     break;
                 case "remove":
@@ -56,5 +78,6 @@ public class CollectionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doPost(req, resp);
+
     }
 }

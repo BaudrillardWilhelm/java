@@ -6,5 +6,5 @@ import com.qdu.model.Interest;
 import java.util.List;
 
 public interface InterestDao {
-    Interest findInterestById(int uid);
+    List<Interest> findInterestListByUid(int uid);
 }

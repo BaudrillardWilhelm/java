@@ -20,7 +20,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
             ps.setString(3, cart.getBookName());
             ps.setDouble(4, cart.getPrice());
             ps.setString(5, cart.getBookType());
-            ps.setString(6, cart.getBookNum());
+            ps.setInt(6, cart.getBookNum());
             ps.setDouble(7, cart.getSum());
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -49,7 +49,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
             ps.setString(1, cart.getBookName());
             ps.setDouble(2, cart.getPrice());
             ps.setString(3, cart.getBookType());
-            ps.setString(4, cart.getBookNum());
+            ps.setInt(4, cart.getBookNum());
             ps.setDouble(5, cart.getSum());
             ps.setInt(6, cart.getUid());
             ps.setInt(7, cart.getBid());
@@ -59,6 +59,13 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
         }
     }
 
+    /**
+     *
+     * @param uid
+     * @param bid
+     * @return  不知道是我什么时候神志不清的时候写的
+     * 我也想不起来是干什么的了
+     */
     @Override
     public ShoppingCart getShoppingCart(int uid, int bid) {
         String sql = "SELECT * FROM shopping_cart WHERE uid = ? AND bid = ?";
@@ -74,7 +81,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
                             rs.getString("book_name"),
                             rs.getDouble("price"),
                             rs.getString("book_type"),
-                            rs.getString("book_num"),
+                            rs.getInt("book_num"),
                             rs.getDouble("sum")
                     );
                 }
@@ -100,7 +107,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
                             rs.getString("book_name"),
                             rs.getDouble("price"),
                             rs.getString("book_type"),
-                            rs.getString("book_num"),
+                            rs.getInt("book_num"),
                             rs.getDouble("sum")
                     );
                     carts.add(cart);
@@ -110,5 +117,16 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
             throw new RuntimeException(e);
         }
         return carts;
+    }
+
+    public int clearCartByUserId(int uid) {
+        String sql = "DELETE FROM shopping_cart WHERE uid = ?";
+        try (Connection con = DatabaseUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, uid);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

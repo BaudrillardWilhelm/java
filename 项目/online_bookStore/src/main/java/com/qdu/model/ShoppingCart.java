@@ -7,14 +7,14 @@ public class ShoppingCart {
     private String bookName; // 书名
     private double price; // 单价
     private String bookType; // 买的书的类型
-    private String bookNum; // 买的书的数目
+    private int bookNum; // 买的书的数目
     private double sum; // 总价
 
     // 构造方法
     public ShoppingCart() {
     }
 
-    public ShoppingCart(int uid, int bid, String bookName, double price, String bookType, String bookNum, double sum) {
+    public ShoppingCart(int uid, int bid, String bookName, double price, String bookType, int bookNum, double sum) {
         this.uid = uid;
         this.bid = bid;
         this.bookName = bookName;
@@ -65,11 +65,11 @@ public class ShoppingCart {
         this.bookType = bookType;
     }
 
-    public String getBookNum() {
+    public int getBookNum() {
         return bookNum;
     }
 
-    public void setBookNum(String bookNum) {
+    public void setBookNum(int bookNum) {
         this.bookNum = bookNum;
     }
 

@@ -29,8 +29,8 @@ public class AddShoppingCartServlet extends HttpServlet {
             String bookName = req.getParameter("bookName");
             double price = Double.parseDouble(req.getParameter("b_price"));
             String bookType = req.getParameter("bookType");
-            String bookNum = req.getParameter("qty");
-            double sum = price * Integer.parseInt(bookNum);
+            int bookNum = Integer.parseInt(req.getParameter("qty"));
+            double sum = price * bookNum;
 
             ShoppingCart cart = new ShoppingCart(uid, bid, bookName, price, bookType, bookNum, sum);
             int result = cartDao.addShoppingCart(cart);

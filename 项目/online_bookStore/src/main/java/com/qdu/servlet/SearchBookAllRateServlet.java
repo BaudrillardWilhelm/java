@@ -38,7 +38,7 @@ public class SearchBookAllRateServlet extends HttpServlet {
         //生成动态响应
         req.setAttribute("rateList", rateList);
         req.setAttribute("book",book);
+//        req.getRequestDispatcher("/BookRate_list.jsp").forward(req, resp);
         req.getRequestDispatcher("/BookRate_list.jsp").forward(req, resp);
-        req.getRequestDispatcher("/WEB-INF/jsp/BookRate_list.jsp").forward(req, resp);
     }
 }

@@ -39,7 +39,7 @@ public class OrderConfirmServlet extends HttpServlet
 
         if (loggedUser == null)
         {
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect("login.html");
             return;
         }
 
@@ -57,7 +57,7 @@ public class OrderConfirmServlet extends HttpServlet
             List<Address> addressList = addressDaoImpl.findAddressListById(String.valueOf(uid));
 
             if (addressList.isEmpty()) {
-                resp.sendRedirect("noAddress.jsp");
+                resp.sendRedirect("ManageAddress.jsp");
                 return;
             }
 
@@ -82,7 +82,8 @@ public class OrderConfirmServlet extends HttpServlet
             );
             req.setAttribute("order",order);
             req.setAttribute("addressList",addressList);
-            req.getRequestDispatcher("/orderConfirm.jsp").forward(req, resp);
+
+            req.getRequestDispatcher("/OneOrderConfirm.jsp").forward(req, resp);
         } catch (NumberFormatException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
