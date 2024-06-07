@@ -26,7 +26,7 @@ public class AddOrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Users loggedUser = (Users) req.getSession().getAttribute("LoggedUser");
+        Users loggedUser = (Users) req.getSession(false).getAttribute("LoggedUser");
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         if (loggedUser == null) {

@@ -2,11 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.qdu.dao.impl.UserDaoImpl" %>
 <%@ page import="com.qdu.model.Users" %>
+<%@ page session="false" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     UserDaoImpl userDaoImpl = new UserDaoImpl();
     request.setAttribute("userDaoImpl", userDaoImpl);
+    HttpSession session = request.getSession();
     Users loggedUser = (Users) session.getAttribute("LoggedUser");
     request.setAttribute("loggedUser", loggedUser);
 %>

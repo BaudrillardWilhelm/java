@@ -3,7 +3,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.qdu.model.ShoppingCart" %>
-
+<%@ page session="false" %>
 <%
     List<ShoppingCart> cartList = (List<ShoppingCart>) request.getAttribute("cartList");
 %>

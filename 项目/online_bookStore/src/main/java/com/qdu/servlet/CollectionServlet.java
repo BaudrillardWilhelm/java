@@ -36,7 +36,7 @@ public class CollectionServlet extends HttpServlet {
     InterestDaoImpl interestDao = new InterestDaoImpl();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Users loggedUser = (Users) req.getSession().getAttribute("LoggedUser");
+        Users loggedUser = (Users) req.getSession(false).getAttribute("LoggedUser");
         int result = 0;
 
         String action = req.getParameter("action");

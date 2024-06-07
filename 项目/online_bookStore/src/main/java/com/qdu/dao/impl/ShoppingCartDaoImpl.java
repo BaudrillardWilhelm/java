@@ -113,6 +113,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
                     carts.add(cart);
                 }
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

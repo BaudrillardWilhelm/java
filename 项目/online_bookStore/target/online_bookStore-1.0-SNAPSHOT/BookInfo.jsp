@@ -2,6 +2,7 @@
 <%@ page import="com.qdu.model.Users" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page session="false" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     UserDaoImpl userDaoImpl = new UserDaoImpl();

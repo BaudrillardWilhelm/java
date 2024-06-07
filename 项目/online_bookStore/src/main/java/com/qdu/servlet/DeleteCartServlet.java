@@ -16,7 +16,7 @@ public class DeleteCartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Users loggedUser = (Users) req.getSession().getAttribute("LoggedUser");
+        Users loggedUser = (Users) req.getSession(false).getAttribute("LoggedUser");
         if (loggedUser == null) {
             resp.sendRedirect("login.jsp");
             return;

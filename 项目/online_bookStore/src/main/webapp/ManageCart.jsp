@@ -2,11 +2,17 @@
 <%@ page import="com.qdu.model.Users" %>
 <%@ page import="com.qdu.model.ShoppingCart" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.qdu.dao.impl.UserDaoImpl" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
+    UserDaoImpl userDaoImpl = new UserDaoImpl();
+    request.setAttribute("userDaoImpl", userDaoImpl);
+    HttpSession session = request.getSession();
+
     Users loggedUser = (Users) session.getAttribute("LoggedUser");
     ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
     List<ShoppingCart> cartList = cartDao.getAllShoppingCartsByUser(loggedUser.getUid());
@@ -19,6 +25,7 @@
     <title>购物车信息</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <style>
         .container {
             max-width: 800px;
@@ -140,6 +147,6 @@
     </div>
 </div>
 
-<script src="js/bootstrap.min.js"></script>
+
 </body>
 </html>

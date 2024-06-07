@@ -30,7 +30,7 @@ public class OrderDaoImpl implements OrderDao {
             ps.setString(4, order.getBuyer_address());
             ps.setString(5, order.getBuyer_tel());
             ps.setString(6, order.getPostal_code());
-            ps.setDate(7, new java.sql.Date(order.getOrder_date().getTime()));
+            ps.setDate(7,(java.sql.Date)order.getOrder_date());
             ps.setInt(8, order.getOrder_type());
             ps.setInt(9, order.getBid());
             ps.setString(10, order.getB_name());

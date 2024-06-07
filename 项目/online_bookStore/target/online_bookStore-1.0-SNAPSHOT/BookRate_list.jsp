@@ -1,6 +1,7 @@
 <%@ page import="com.qdu.dao.impl.UserDaoImpl" %>
 <%@ page import="com.qdu.model.Users" %>
 <%@ page import="com.qdu.model.Book_info" %>
+<%@ page session="false" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
