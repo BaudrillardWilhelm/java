@@ -21,8 +21,6 @@
           <element id="library" level="project" name="Maven: org.apache.taglibs:taglibs-standard-spec:1.2.5" />
           <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-el-api:9.0.87" />
           <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.11.4" />
-          <element id="library" level="project" name="cos" />
-          <element id="library" level="project" name="gson-2.9.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

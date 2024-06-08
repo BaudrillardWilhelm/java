@@ -2,6 +2,7 @@
 <%@ page import="com.qdu.model.Users" %>
 <%@ page import="com.qdu.model.Address" %>
 <%@ page import="java.util.List" %>
+<%@ page session="false" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -10,6 +11,8 @@
     AddressDaoImpl addressDao = new AddressDaoImpl();
     List<Address> addressList = addressDao.findAddressListById(String.valueOf(loggedUser.getUid()));
 %>
+
+<script src="js/bootstrap.min.js"></script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,6 +36,7 @@
         }
     </style>
     <script>
+
         function showEditModal(address) {
             $('#editAddressId').val(address.user_address_id);
             $('#editReceiverName').val(address.receiver_name);
@@ -111,6 +115,11 @@
 </head>
 <body>
 <div class="container">
+<%--    /**--%>
+<%--    * 是一个基本上可以独立运行的页面，从session中拿loggedUser--%>
+<%--    * 用于管理用户地址--%>
+<%--    * @param address--%>
+<%--    */--%>
     <h2>管理收货地址</h2>
     <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModal">新增地址</button>
     <div class="address-list">
@@ -235,7 +244,7 @@
     </div>
 </div>
 
-<script src="js/bootstrap.min.js"></script>
+
 <script>
     // Populate provinces, cities, and areas dynamically
     // Add your logic here to load the options dynamically

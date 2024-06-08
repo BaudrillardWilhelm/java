@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page session="false" %>
 <!--<!DOCTYPE html>-->
 <html>
     <head>
@@ -58,7 +59,8 @@
             </div>
 
             <!-- 显示用户名的span元素 -->
-            <%Users user =sessionScope.getAttribute("LoggedUser");%>
+            <% Users user = session.getAttribute("LoggedUser"); %>
+
 
             <span id="titleDisplay">${user.uname}</span>
 

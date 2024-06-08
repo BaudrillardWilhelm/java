@@ -1,5 +1,6 @@
 <%@ page import="com.qdu.dao.impl.UserDaoImpl" %>
 <%@ page import="com.qdu.model.Users" %>
+<%@ page session="false" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -45,7 +46,7 @@
                 success: function(response) {
                     if (response == 1) {
                         alert('地址添加成功');
-                        window.location.href = 'orderConfirm.jsp';
+                        window.location.href = 'OneOrderConfirm.jsp';
                     } else if (response == 0) {
                         alert('地址添加失败');
                     } else if (response == -1) {

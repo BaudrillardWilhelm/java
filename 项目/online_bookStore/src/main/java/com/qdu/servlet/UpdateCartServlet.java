@@ -22,7 +22,7 @@ public class UpdateCartServlet extends HttpServlet {
 //        String bid = request.getParameter("bid");
         int bid = Integer.parseInt(request.getParameter("bid"));
         int newQty = Integer.parseInt(request.getParameter("newQty"));
-        Users loggedUser = (Users) request.getSession().getAttribute("LoggedUser");
+        Users loggedUser = (Users) request.getSession(false).getAttribute("LoggedUser");
         if (bid != 0 && newQty != 0) {
             try {
                 ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();

@@ -32,7 +32,7 @@ public class AddManyOrdersServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Users loggedUser = (Users) req.getSession().getAttribute("LoggedUser");
+        Users loggedUser = (Users) req.getSession(false).getAttribute("LoggedUser");
 
         if (loggedUser == null) {
             resp.sendRedirect("login.jsp");
@@ -90,6 +90,7 @@ public class AddManyOrdersServlet extends HttpServlet {
             // 扣除用户余额
             double newBalance = loggedUser.getMoney() - totalSum;
             loggedUser.setMoney(newBalance);
+
             usersDao.updateUser(loggedUser);  // 更新用户余额
 
             // 清空购物车

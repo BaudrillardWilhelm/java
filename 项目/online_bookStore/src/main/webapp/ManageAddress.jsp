@@ -2,6 +2,7 @@
 <%@ page import="com.qdu.model.Users" %>
 <%@ page import="com.qdu.model.Address" %>
 <%@ page import="java.util.List" %>
+<%@ page session="false" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -10,6 +11,7 @@
     AddressDaoImpl addressDao = new AddressDaoImpl();
     List<Address> addressList = addressDao.findAddressListById(String.valueOf(loggedUser.getUid()));
 %>
+
 <script src="js/bootstrap.min.js"></script>
 <!DOCTYPE html>
 <html>

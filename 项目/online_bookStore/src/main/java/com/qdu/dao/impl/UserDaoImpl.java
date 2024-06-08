@@ -53,7 +53,21 @@ public class UserDaoImpl implements UserDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Users(rs.getInt("uid"), rs.getString("uname"), rs.getString("upassword"), rs.getString("uquestion"), rs.getString("uanswer"), rs.getString("true_name"), rs.getString("gender"), rs.getString("tel"), rs.getString("e_mail"), rs.getString("career"), rs.getString("interest"), rs.getString("address"), rs.getDouble("money"), rs.getDate("registration_time"));
+                return new Users(
+                        rs.getInt("uid"),
+                        rs.getString("uname"),
+                        rs.getString("upassword"),
+                        rs.getString("uquestion"),
+                        rs.getString("uanswer"),
+                        rs.getString("true_name"),
+                        rs.getString("gender"),
+                        rs.getString("tel"),
+                        rs.getString("Email"),
+                        rs.getString("career"),
+                        rs.getString("interest"),
+                        rs.getString("address"),
+                        rs.getDouble("money"),
+                        rs.getDate("registration_time"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +115,21 @@ public class UserDaoImpl implements UserDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Back = new Users(rs.getInt("uid"), rs.getString("uname"), rs.getString("upassword"), rs.getString("uquestion"), rs.getString("uanswer"), rs.getString("true_name"), rs.getString("gender"), rs.getString("tel"), rs.getString("e_mail"), rs.getString("career"), rs.getString("interest"), rs.getString("address"), rs.getDouble("money"), rs.getDate("registration_time"));
+                Back = new Users(
+                        rs.getInt("uid"),
+                        rs.getString("uname"),
+                        rs.getString("upassword"),
+                        rs.getString("uquestion"),
+                        rs.getString("uanswer"),
+                        rs.getString("true_name"),
+                        rs.getString("gender"),
+                        rs.getString("tel"),
+                        rs.getString("Email"),
+                        rs.getString("career"),
+                        rs.getString("interest"),
+                        rs.getString("address"),
+                        rs.getDouble("money"),
+                        rs.getDate("registration_time"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -265,4 +293,5 @@ public class UserDaoImpl implements UserDao {
             DatabaseUtil.close(null, ps, con);
         }
     }
+
 }

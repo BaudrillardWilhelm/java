@@ -1,9 +1,20 @@
+<%@ page import="com.qdu.dao.impl.UserDaoImpl" %>
+<%@ page import="com.qdu.model.Users" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page session="false" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    UserDaoImpl userDaoImpl = new UserDaoImpl();
+    Users loggedUser = (Users) session.getAttribute("LoggedUser");
+    request.setAttribute("loggedUser", loggedUser);
+%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="images/shortcut.png" rel="shortcut icon" type="image/x-icon"/>
-    <title>产品信息</title>
+    <title>详细信息</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/style.css"/>
     <script src="js/wangEditor.min.js"></script>
@@ -14,7 +25,7 @@
             $("#btn_cart").click(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: 'AddShoppingCartServlet',
+                    url: 'AddShoppingCartServlet',      //跳转到AddShoppingCartServlet
                     type: 'POST',
                     data: {
                         qty: $("input[name='qty']").val(),
@@ -43,7 +54,7 @@
             $("#btn_collect").click(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: 'collection',
+                    url: 'collection',      //跳转到CollectionServlet
                     type: 'POST',
                     data: {
                         bid: $("input[name='bid']").val(),
@@ -99,7 +110,6 @@
 <div class="content">
     <br>
     <c:set var="b" value="${requestScope.bookInfo}"/>
-
     <img src="images/${b.bid}" class="pic">
     <h3 id="bookName">图书名称： ${b.b_bname} </h3>
     <p>图书单价： <fmt:formatNumber value="${b.b_price}" type="currency"/> </p>

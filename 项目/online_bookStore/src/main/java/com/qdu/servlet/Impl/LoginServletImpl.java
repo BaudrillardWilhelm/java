@@ -4,35 +4,40 @@ import com.google.gson.Gson;
 import com.oreilly.servlet.MultipartRequest;
 import com.qdu.dao.impl.UserDaoImpl;
 import com.qdu.model.Login_if;
-import com.qdu.model.lyyAjax;
+import com.qdu.model.Users;
+import com.qdu.servlet.LoginServlet;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 @WebServlet("/ls")
-public class LoginServletImpl extends HttpServlet {
+public class LoginServletImpl extends HttpServlet implements LoginServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String save_directory = lyyAjax.getInstance().getUrl();
+        String save_directory = "D:/java专用/A期末项目/项目/online_bookStore/src/main/webapp/ShowUserImage";
         MultipartRequest mreq = new MultipartRequest(request,save_directory,1024*1024*10,"UTF-8");
         String uname=mreq.getParameter("name");
         String pwd=mreq.getParameter("password");
         UserDaoImpl uo = new UserDaoImpl();
+        Users user = uo.GetInformationByNameAndPassword(uname, pwd);
         Map<String,Object>resultMap = new HashMap<>();
-        if(uo.haveThePeopleByUnameAndUpassword(uname,pwd))
+        if(user != null)
         {
             resultMap.put("isLogin",true);
             Login_if.getInstance().setIfLogin(true);
-            //HttpSession session = request.getSession();
-            //session.setAttribute("loggedUser",uo.GetInformationByNameAndPassword(uname,pwd));
+
+            HttpSession session = request.getSession();
+            session.setAttribute("LoggedUser",user);
+
+            Cookie cookie = new Cookie("JSESSIONID",session.getId());
+            response.addCookie(cookie);
+
         }
         else
         {

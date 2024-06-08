@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/manyOrdersConfirmServlet")
 public class ManyOrdersConfirmServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         Users loggedUser = (Users) session.getAttribute("LoggedUser");
 
         if (loggedUser != null) {
