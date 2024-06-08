@@ -11,13 +11,9 @@
     <title>Title</title>
 </head>
 <body>
-<div>
-    <h1><p></p></h1>
-</div>
-<div id="UserList">
-    <button value="个人信息"></button><br>
-    <button value="账户余额和充值"></button><br>
-    <button value="修改个人信息"></button><br>
-</div>
+<form id="UserManagerShow">
+
+</form>
+<form id="UserRecharge"></form>
 </body>
 </html>
