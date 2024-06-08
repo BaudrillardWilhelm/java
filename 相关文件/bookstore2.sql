@@ -5,17 +5,29 @@
  Source Server Type    : MySQL
  Source Server Version : 50717
  Source Host           : localhost:3306
- Source Schema         : java
+ Source Schema         : bookstore2
 
  Target Server Type    : MySQL
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 05/06/2024 09:52:48
+ Date: 08/06/2024 15:58:36
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for ban
+-- ----------------------------
+DROP TABLE IF EXISTS `ban`;
+CREATE TABLE `ban`  (
+  `banid` int(11) NOT NULL
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of ban
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for book_info
@@ -23,21 +35,25 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `book_info`;
 CREATE TABLE `book_info`  (
   `bid` int(11) NOT NULL AUTO_INCREMENT,
-  `b_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `b_name` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `b_price` double NULL DEFAULT NULL,
   `b_num` int(11) NOT NULL,
   `b_imgpath` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `type_id` int(11) NULL DEFAULT NULL,
-  `publisher` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `publisher` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `b_time` date NULL DEFAULT NULL,
   `rate_number` int(11) NULL DEFAULT 10 COMMENT '评分，根据用户们的评分做平均值',
-  `author` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `author` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `storage_time` date NULL DEFAULT NULL,
-  `b_info` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简介',
+  `b_info` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '简介',
   `discount` double NULL DEFAULT NULL COMMENT '折扣',
   PRIMARY KEY (`bid`) USING BTREE,
   INDEX `idx_type_id`(`type_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of book_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for collection
@@ -45,7 +61,7 @@ CREATE TABLE `book_info`  (
 DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection`  (
   `bid` int(11) NOT NULL,
-  `book_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '书名',
+  `book_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `book_time` date NULL DEFAULT NULL,
   `book_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '书的类型',
   `uid` int(11) NOT NULL,
@@ -54,6 +70,10 @@ CREATE TABLE `collection`  (
   CONSTRAINT `collection_ibfk_1` FOREIGN KEY (`bid`) REFERENCES `book_info` (`bid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `collection_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of collection
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for interest
@@ -70,26 +90,34 @@ CREATE TABLE `interest`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
+-- Records of interest
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for orders
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
   `oid` int(11) NOT NULL AUTO_INCREMENT,
-  `receiver_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `buyer_address` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `buyer_tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `receiver_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `buyer_address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `buyer_tel` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `postal_code` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `order_date` date NULL DEFAULT NULL,
   `uid` int(11) NOT NULL,
   `order_type` int(11) NULL DEFAULT NULL,
   `bid` int(11) NULL DEFAULT NULL COMMENT '商品id',
-  `b_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书名',
+  `b_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `book_num` int(11) NOT NULL COMMENT '买的书的数目',
   `sum_price` double NULL DEFAULT NULL COMMENT '总价',
   PRIMARY KEY (`oid`) USING BTREE,
   INDEX `uid`(`uid`) USING BTREE,
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of orders
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for rate
@@ -108,13 +136,17 @@ CREATE TABLE `rate`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
+-- Records of rate
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for shopping_cart
 -- ----------------------------
 DROP TABLE IF EXISTS `shopping_cart`;
 CREATE TABLE `shopping_cart`  (
   `uid` int(11) NOT NULL COMMENT '外键，指向users表的uid',
   `bid` int(11) NOT NULL COMMENT '书编号，外键，指向book_info表的bid',
-  `book_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书名',
+  `book_name` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `price` double NOT NULL COMMENT '单价',
   `book_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '买的书的类型',
   `book_num` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '买的书的数目',
@@ -126,6 +158,10 @@ CREATE TABLE `shopping_cart`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
+-- Records of shopping_cart
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
@@ -133,7 +169,7 @@ CREATE TABLE `users`  (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `upassword` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `uquestion` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `uquestion` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `uanswer` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `true_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `gender` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -145,6 +181,11 @@ CREATE TABLE `users`  (
   `money` decimal(10, 2) NOT NULL,
   `registration_time` date NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (1, '1', '1', '1', '1', '1', '1', '15965977763', '1', '1', '1', '1', 1.00, '2024-06-03');
 
 SET FOREIGN_KEY_CHECKS = 1;

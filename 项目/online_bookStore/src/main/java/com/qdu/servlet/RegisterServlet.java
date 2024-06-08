@@ -2,7 +2,9 @@ package com.qdu.servlet;
 
 import com.google.gson.Gson;
 import com.oreilly.servlet.MultipartRequest;
+import com.qdu.dao.impl.InterestDaoImpl;
 import com.qdu.dao.impl.UserDaoImpl;
+import com.qdu.model.Interest;
 import com.qdu.model.Users;
 
 import javax.servlet.ServletException;
@@ -33,7 +35,91 @@ public class RegisterServlet extends HttpServlet {
         // 打印格式化后的日期和时间
         if(uo.PushNewUser(push))
         {
-            resultMap.put("RegisterTrue",true);
+            int uidUse = uo.GetUidByUnameAndUpassword(mreq.getParameter("userName"),mreq.getParameter("userPassword"));
+            if(uidUse == -1)
+            {
+                resultMap.put("RegisterTrue",false);
+            }
+            else
+            {
+                String[]receive = mreq.getParameterValues("Interest");
+                Interest pushInterest = new Interest();
+                pushInterest.setUid(uidUse);
+                InterestDaoImpl pushUse = new InterestDaoImpl();
+                for(String Interest : receive)
+                {
+                    if(Interest.equals("文学"))
+                    {
+                        pushInterest.setType_name("文学");
+                        pushInterest.setType_id(1);
+                    }
+                    else if(Interest.equals("科幻"))
+                    {
+                        pushInterest.setType_name("科幻");
+                        pushInterest.setType_id(2);
+                    }
+                    else if(Interest.equals("历史"))
+                    {
+                        pushInterest.setType_name("历史");
+                        pushInterest.setType_id(8);
+                    }
+                    else if(Interest.equals("冒险"))
+                    {
+                        pushInterest.setType_name("冒险");
+                        pushInterest.setType_id(6);
+                    }
+                    else if(Interest.equals("经典"))
+                    {
+                        pushInterest.setType_name("经典");
+                        pushInterest.setType_id(3);
+                    }
+                    else if(Interest.equals("爱情"))
+                    {
+                        pushInterest.setType_name("爱情");
+                        pushInterest.setType_id(4);
+                    }
+                    else if(Interest.equals("幻想"))
+                    {
+                        pushInterest.setType_name("幻想");
+                        pushInterest.setType_id(12);
+                    }
+                    else if(Interest.equals("社会"))
+                    {
+                        pushInterest.setType_name("社会");
+                        pushInterest.setType_id(5);
+                    }
+                    else if(Interest.equals("诗歌"))
+                    {
+                        pushInterest.setType_name("诗歌");
+                        pushInterest.setType_id(9);
+                    }
+                    else if(Interest.equals("小说"))
+                    {
+                        pushInterest.setType_name("小说");
+                        pushInterest.setType_id(7);
+                    }
+                    else if(Interest.equals("传记"))
+                    {
+                        pushInterest.setType_name("传记");
+                        pushInterest.setType_id(13);
+                    }
+                    else if(Interest.equals("戏剧"))
+                    {
+                        pushInterest.setType_name("戏剧");
+                        pushInterest.setType_id(11);
+                    }
+                    else if(Interest.equals("宗教"))
+                    {
+                        pushInterest.setType_name("宗教");
+                        pushInterest.setType_id(10);
+                    }
+                    pushUse.addInterest((pushInterest));
+                }
+                resultMap.put("RegisterTrue",true);
+                resultMap.put("uid",uidUse);
+            }
+
+
         }
         else
         {

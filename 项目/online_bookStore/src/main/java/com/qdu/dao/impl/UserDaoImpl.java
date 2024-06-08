@@ -4,6 +4,7 @@ import com.qdu.dao.UserDao;
 import com.qdu.model.Users;
 import com.qdu.util.DatabaseUtil;
 
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -25,7 +26,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Users");
+            ps = con.prepareStatement("select * from users");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -48,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Users where uid=?");
+            ps = con.prepareStatement("select * from users where uid=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
@@ -77,7 +78,7 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-    public boolean haveThePeopleByUnameAndUpassword(String uname, String upassword)//根据用户名和密码判断用户是否存在
+    public boolean haveThePeopleByUidAndUpassword(String uid, String upassword)//根据用户名和密码判断用户是否存在
     {
         Connection con = null;
         PreparedStatement ps = null;
@@ -85,8 +86,8 @@ public class UserDaoImpl implements UserDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Users where uname=? and upassword=?");
-            ps.setString(1, uname);
+            ps = con.prepareStatement("select * from users where uid=? and upassword=?");
+            ps.setString(1, uid);
             ps.setString(2, upassword);
             rs = ps.executeQuery();
 
@@ -102,15 +103,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Users GetInformationByNameAndPassword(String uname, String upassword) {
+    public Users GetInformationByidAndPassword(String uid, String upassword) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Users Back = null;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Users where uname=? and upassword=?");
-            ps.setString(1, uname);
+            ps = con.prepareStatement("select * from users where uid=? and upassword=?");
+            ps.setString(1, uid);
             ps.setString(2, upassword);
             rs = ps.executeQuery();
 
@@ -148,7 +149,7 @@ public class UserDaoImpl implements UserDao {
         String Back = null;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select uquestion  from Users where tel=?");
+            ps = con.prepareStatement("select uquestion  from users where tel=?");
             ps.setString(1, phone);
             rs = ps.executeQuery();
 
@@ -171,7 +172,7 @@ public class UserDaoImpl implements UserDao {
         boolean back = false;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select *  from Users where uquestion=? and uanswer=?");
+            ps = con.prepareStatement("select *  from users where uquestion=? and uanswer=?");
             ps.setString(1, question);
             ps.setString(2, answer);
             rs = ps.executeQuery();
@@ -194,7 +195,7 @@ public class UserDaoImpl implements UserDao {
         String back = "gg";
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select upassword  from Users where uquestion=? and uanswer=?");
+            ps = con.prepareStatement("select upassword  from users where uquestion=? and uanswer=?");
             ps.setString(1, question);
             ps.setString(2, answer);
             rs = ps.executeQuery();
@@ -249,11 +250,34 @@ public class UserDaoImpl implements UserDao {
         boolean back = false;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select *  from Users where tel=?");
+            ps = con.prepareStatement("select *  from users where tel=?");
             ps.setString(1, in);
             rs = ps.executeQuery();
             while (rs.next()) {
                 back = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+            return back;
+        }
+    }
+
+    @Override
+    public int GetUidByUnameAndUpassword(String uname, String upassword) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int back = -1;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select uid  from users where uname=? and upassword=?");
+            ps.setString(1, uname);
+            ps.setString(2, upassword);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                back = rs.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,7 +293,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("UPDATE Users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, e_mail=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
+            ps = con.prepareStatement("UPDATE users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, e_mail=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
 
             ps.setString(1, loggedUser.getUname());
             ps.setString(2, loggedUser.getUpassword());
