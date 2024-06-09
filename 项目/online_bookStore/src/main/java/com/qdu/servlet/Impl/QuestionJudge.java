@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.oreilly.servlet.MultipartRequest;
 import com.qdu.dao.UserDao;
 import com.qdu.dao.impl.UserDaoImpl;
+import com.qdu.model.lyyAjax;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ public class QuestionJudge extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String save_directory = "D:/java专用/A期末项目/项目/online_bookStore/src/main/webapp/ShowUserImage";
+        String save_directory = lyyAjax.getInstance().getUrl();
         MultipartRequest mreq = new MultipartRequest(request,save_directory,1024*1024*10,"UTF-8");
         String Question=mreq.getParameter("findQuestion");
         String Answer=mreq.getParameter("findAnswer");
