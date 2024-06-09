@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                usersList.add(new Users(rs.getInt("uid"), rs.getString("uname"), rs.getString("upassword"), rs.getString("uquestion"), rs.getString("uanswer"), rs.getString("true_name"), rs.getString("gender"), rs.getString("tel"), rs.getString("e_mail"), rs.getString("career"), rs.getString("interest"), rs.getString("address"), rs.getDouble("money"), rs.getDate("registration_time")));
+                usersList.add(new Users(rs.getInt("uid"), rs.getString("uname"), rs.getString("upassword"), rs.getString("uquestion"), rs.getString("uanswer"), rs.getString("true_name"), rs.getString("gender"), rs.getString("tel"), rs.getString("Email"), rs.getString("career"), rs.getString("interest"), rs.getString("address"), rs.getDouble("money"), rs.getDate("registration_time")));
             }
             return usersList;
         } catch (Exception e) {
@@ -263,13 +263,14 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public void updateUser(Users loggedUser) {
+    public int updateUser(Users loggedUser) {
         Connection con = null;
         PreparedStatement ps = null;
+        int result = 0; // 初始化 result 为 0
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("UPDATE Users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, e_mail=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
+            ps = con.prepareStatement("UPDATE Users SET uname=?, upassword=?, uquestion=?, uanswer=?, true_name=?, gender=?, tel=?, Email=?, career=?, interest=?, address=?, money=?, registration_time=? WHERE uid=?");
 
             ps.setString(1, loggedUser.getUname());
             ps.setString(2, loggedUser.getUpassword());
@@ -283,15 +284,16 @@ public class UserDaoImpl implements UserDao {
             ps.setString(10, loggedUser.getInterest());
             ps.setString(11, loggedUser.getAddress());
             ps.setDouble(12, loggedUser.getMoney());
-            ps.setDate(13, (java.sql.Date)loggedUser.getRegistration_time());
+            ps.setDate(13, new java.sql.Date(loggedUser.getRegistration_time().getTime()));
             ps.setInt(14, loggedUser.getUid());
 
-            ps.executeUpdate();
+            // 执行更新，并将受影响的行数赋值给 result
+            result = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             DatabaseUtil.close(null, ps, con);
         }
+        return result; // 返回受影响的行数
     }
-
 }

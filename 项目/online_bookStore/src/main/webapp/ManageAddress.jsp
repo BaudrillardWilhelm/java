@@ -7,6 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
+    HttpSession session = request.getSession(false);
     Users loggedUser = (Users) session.getAttribute("LoggedUser");
     AddressDaoImpl addressDao = new AddressDaoImpl();
     List<Address> addressList = addressDao.findAddressListById(String.valueOf(loggedUser.getUid()));

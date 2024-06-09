@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/clearCartServlet")
 public class ClearCartServlet extends HttpServlet {
@@ -30,11 +31,13 @@ public class ClearCartServlet extends HttpServlet {
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-
-        if (result > 0) {
-            resp.getWriter().write("{\"status\": \"success\"}");
+        PrintWriter out = resp.getWriter();
+        if (result  > 0) {
+            out.write("{\"status\": 1}");
         } else {
-            resp.getWriter().write("{\"status\": \"error\"}");
+            out.write("{\"status\": 0}");
         }
+        out.flush();
+        out.close();
     }
 }

@@ -12,30 +12,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-/**
- * 前置是ManyOrdersConfirm.jsp
- * 是最后一步，这里完了这个订单就添加完成了
- * 用ajax
- */
 
 @WebServlet("/AddManyOrdersServlet")
 public class AddManyOrdersServlet extends HttpServlet {
 
     private OrderDaoImpl orderDao = new OrderDaoImpl();
     private ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
-    private UserDaoImpl usersDao = new UserDaoImpl();  // 实例化UsersDaoImpl
+    private UserDaoImpl usersDao = new UserDaoImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Users loggedUser = (Users) req.getSession(false).getAttribute("LoggedUser");
+        HttpSession session = req.getSession(false);
+        Users loggedUser = (Users) session.getAttribute("LoggedUser");
 
         if (loggedUser == null) {
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect("Userlogin.jsp");
             return;
         }
 
@@ -48,7 +44,6 @@ public class AddManyOrdersServlet extends HttpServlet {
 
         // 检查用户余额是否足够
         if (loggedUser.getMoney() < totalSum) {
-            // 设置响应的内容类型为 JSON
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             resp.getWriter().write("{\"status\": \"insufficient_funds\"}");
@@ -82,18 +77,17 @@ public class AddManyOrdersServlet extends HttpServlet {
             }
         }
 
-        // 设置响应的内容类型为 JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         if (allOrdersAdded) {
-            // 扣除用户余额
             double newBalance = loggedUser.getMoney() - totalSum;
             loggedUser.setMoney(newBalance);
-
-            usersDao.updateUser(loggedUser);  // 更新用户余额
-
-            // 清空购物车
+            int result = usersDao.updateUser(loggedUser);  // 更新用户余额
+            if(result < 0 || result ==0)
+            {
+                resp.getWriter().write("{\"status\": \"user_false\"}");
+            }
             cartDao.clearCartByUserId(loggedUser.getUid());
 
             resp.getWriter().write("{\"status\": \"success\"}");

@@ -6,6 +6,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     UserDaoImpl userDaoImpl = new UserDaoImpl();
+    HttpSession session = request.getSession(false);
     Users loggedUser = (Users) session.getAttribute("LoggedUser");
     request.setAttribute("loggedUser", loggedUser);
 %>

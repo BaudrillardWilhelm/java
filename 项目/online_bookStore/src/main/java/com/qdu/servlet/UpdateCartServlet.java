@@ -19,10 +19,10 @@ import java.io.IOException;
 @WebServlet("/updateCartServlet")
 public class UpdateCartServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String bid = request.getParameter("bid");
         int bid = Integer.parseInt(request.getParameter("bid"));
         int newQty = Integer.parseInt(request.getParameter("newQty"));
         Users loggedUser = (Users) request.getSession(false).getAttribute("LoggedUser");
+        response.setContentType("application/json;charset=utf-8");        //添加这句话会让这部分程序正确运行，但是返回的response接收方接收不到
         if (bid != 0 && newQty != 0) {
             try {
                 ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
@@ -33,12 +33,12 @@ public class UpdateCartServlet extends HttpServlet {
                     cart.setBookNum(newQty);
                     cart.setSum(cart.getPrice() * newQty);
                     cartDao.updateShoppingCart(cart);
-                    response.getWriter().write("{\"status\": \"success\"}");
+                    response.getWriter().print("{\"status\": \"success\"}");
                 } else {
-                    response.getWriter().write("{\"status\": \"error\"}");
+                    response.getWriter().print("{\"status\": \"false\"}");
                 }
             } catch (NumberFormatException e) {
-                response.getWriter().write("{\"status\": \"error\"}");
+                response.getWriter().print("{\"status\": \"error\"}");
             }
         } else {
             response.getWriter().write("{\"status\": \"error\"}");

@@ -3,7 +3,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.qdu.model.ShoppingCart" %>
-<%@ page session="false" %>
 <%
     List<ShoppingCart> cartList = (List<ShoppingCart>) request.getAttribute("cartList");
 %>
@@ -30,23 +29,33 @@
 </head>
 <body>
 <div class="container">
-<%--    前置是：ManyOrdersConfirmServlet--%>
-
     <h2>订单确认</h2>
     <form id="confirmOrderForm" method="post">
         <div id="orderList">
-            <c:forEach var="order" items="${cartList}">
-                <div class="order-row">
-                    <strong>${order.bookName}</strong><br>
-                    数量：${order.bookNum}<br>
-                    总价：<fmt:formatNumber value="${order.sum}" type="currency" />
-                </div>
-            </c:forEach>
+            <c:choose>
+                <c:when test="${cartList.isEmpty()}">
+                    <hr><h3>暂无任何订单！</h3><hr>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="order" items="${cartList}">
+                        <div class="order-row">
+                            <strong>${order.bookName}</strong><br>
+                            数量：${order.bookNum}<br>
+                            总价：<fmt:formatNumber value="${order.sum}" type="currency" />
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div>
+            <input type="text" name="receiverName" placeholder="收货人" required>
+            <input type="text" name="buyerAddress" placeholder="收货地址" required>
+            <input type="text" name="buyerTel" placeholder="电话" required>
+            <input type="text" name="postalCode" placeholder="邮编" required>
             <button type="button" class="btn btn-success" onclick="confirmOrder()">去支付</button>
         </div>
     </form>
+
 </div>
 
 <script>
@@ -58,14 +67,19 @@
             success: function(response) {
                 if (response.status === "success") {
                     alert('订单提交成功！');
+                    window.location.href = 'index.jsp';  // 跳转到成功页面
                 } else if(response.status === "insufficient_funds") {
                     alert('账户余额不足，请先进行充值！');
-                } else {
+                } else if(response.status === "user_false")
+                {
+                    alert('error：没扣钱   且   购物车清空成功，但是订单添加成功！！');
+                }
+                else {
                     alert('订单提交失败！');
                 }
             },
             error: function() {
-                alert('请求失败');
+                alert('进入AddManyOrdersServlet失败！ 请求失败');
             }
         });
     }
