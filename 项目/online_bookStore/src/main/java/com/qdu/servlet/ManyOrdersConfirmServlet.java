@@ -1,6 +1,8 @@
 package com.qdu.servlet;
 
+import com.qdu.dao.impl.AddressDaoImpl;
 import com.qdu.dao.impl.ShoppingCartDaoImpl;
+import com.qdu.model.Address;
 import com.qdu.model.ShoppingCart;
 import com.qdu.model.Users;
 
@@ -15,17 +17,24 @@ import java.util.List;
 
 @WebServlet("/manyOrdersConfirmServlet")
 public class ManyOrdersConfirmServlet extends HttpServlet {
+    ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
+    AddressDaoImpl addressDao = new AddressDaoImpl();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         Users loggedUser = (Users) session.getAttribute("LoggedUser");
 
         if (loggedUser != null) {
-            ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
+
+            int uid = loggedUser.getUid();
+            List<Address> addressList = addressDao.findAddressListById(uid);
             List<ShoppingCart> cartList = cartDao.getAllShoppingCartsByUser(loggedUser.getUid());
+
+            request.setAttribute("defaultAddress",addressList.get(0));
+            request.setAttribute("addressList",addressList);
             request.setAttribute("cartList",cartList);
             request.getRequestDispatcher("/ManyOrdersConfirm.jsp").forward(request, response);
         } else {
-                response.sendRedirect("/login.html"); // 如果用户未登录，重定向到登录页面
+                response.sendRedirect("/Userlogin.jsp"); // 如果用户未登录，重定向到登录页面
         }
     }
 }

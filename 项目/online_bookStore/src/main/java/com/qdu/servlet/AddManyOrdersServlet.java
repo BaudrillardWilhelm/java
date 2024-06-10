@@ -23,15 +23,15 @@ public class AddManyOrdersServlet extends HttpServlet {
 
     private OrderDaoImpl orderDao = new OrderDaoImpl();
     private ShoppingCartDaoImpl cartDao = new ShoppingCartDaoImpl();
-    private UserDaoImpl usersDao = new UserDaoImpl();
+    private UserDaoImpl usersDao = new UserDaoImpl();  // 实例化UsersDaoImpl
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         Users loggedUser = (Users) session.getAttribute("LoggedUser");
 
         if (loggedUser == null) {
-            resp.sendRedirect("Userlogin.jsp");
+            resp.sendRedirect("login.jsp");
             return;
         }
 
@@ -44,6 +44,7 @@ public class AddManyOrdersServlet extends HttpServlet {
 
         // 检查用户余额是否足够
         if (loggedUser.getMoney() < totalSum) {
+            // 设置响应的内容类型为 JSON
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             resp.getWriter().write("{\"status\": \"insufficient_funds\"}");
@@ -52,12 +53,17 @@ public class AddManyOrdersServlet extends HttpServlet {
 
         List<Order> orderList = new ArrayList<>();
         for (ShoppingCart cart : cartList) {
+            String receiverName = req.getParameter("receiverName-" + cart.getBid());
+            String buyerAddress = req.getParameter("buyerAddress-" + cart.getBid());
+            String buyerTel = req.getParameter("buyerTel-" + cart.getBid());
+            String postalCode = req.getParameter("postalCode-" + cart.getBid());
+
             Order order = new Order(
                     loggedUser.getUid(),
-                    req.getParameter("receiverName"),
-                    req.getParameter("buyerAddress"),
-                    req.getParameter("buyerTel"),
-                    req.getParameter("postalCode"),
+                    receiverName,
+                    buyerAddress,
+                    buyerTel,
+                    postalCode,
                     new Date(),
                     0,  // 默认订单类型为未送达
                     cart.getBid(),
@@ -77,17 +83,18 @@ public class AddManyOrdersServlet extends HttpServlet {
             }
         }
 
+        // 设置响应的内容类型为 JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         if (allOrdersAdded) {
+            // 扣除用户余额
             double newBalance = loggedUser.getMoney() - totalSum;
             loggedUser.setMoney(newBalance);
-            int result = usersDao.updateUser(loggedUser);  // 更新用户余额
-            if(result < 0 || result ==0)
-            {
-                resp.getWriter().write("{\"status\": \"user_false\"}");
-            }
+
+            usersDao.updateUser(loggedUser);  // 更新用户余额
+
+            // 清空购物车
             cartDao.clearCartByUserId(loggedUser.getUid());
 
             resp.getWriter().write("{\"status\": \"success\"}");

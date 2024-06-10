@@ -4,15 +4,15 @@
 <%@ page import="java.util.List" %>
 <%@ page session="false" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%
+    HttpSession session = request.getSession(false);
     Users loggedUser = (Users) session.getAttribute("LoggedUser");
     AddressDaoImpl addressDao = new AddressDaoImpl();
-    List<Address> addressList = addressDao.findAddressListById(String.valueOf(loggedUser.getUid()));
+    int uid = loggedUser.getUid();
+    List<Address> addressList = addressDao.findAddressListById(uid);
 %>
 
-<script src="js/bootstrap.min.js"></script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +20,7 @@
     <title>管理收货地址</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <style>
         .container {
             max-width: 800px;
@@ -36,16 +37,82 @@
         }
     </style>
     <script>
+        $(document).ready(function() {
+            loadProvinces('#addProvince');
+            loadProvinces('#editProvince');
 
-        function showEditModal(address) {
-            $('#editAddressId').val(address.user_address_id);
-            $('#editReceiverName').val(address.receiver_name);
-            $('#editBuyerTel').val(address.tel);
-            $('#editPostalCode').val(address.postal_code);
-            $('#editProvince').val(address.province);
-            $('#editCity').val(address.city);
-            $('#editArea').val(address.area);
-            $('#editInfo').val(address.info);
+            $('#addProvince').change(function() {
+                loadCities('#addCity', $(this).val());
+                $('#addArea').empty().append('<option value="">请选择区</option>');
+            });
+
+            $('#addCity').change(function() {
+                loadAreas('#addArea', $(this).val());
+            });
+
+            $('#editProvince').change(function() {
+                loadCities('#editCity', $(this).val());
+                $('#editArea').empty().append('<option value="">请选择区</option>');
+            });
+
+            $('#editCity').change(function() {
+                loadAreas('#editArea', $(this).val());
+            });
+        });
+
+        function loadProvinces(selectId) {
+            $.getJSON('json/china.json', function(data) {
+                $(selectId).empty().append('<option value="">请选择省</option>');
+                $.each(data, function(index, province) {
+                    $(selectId).append($('<option>', { value: province.name, text: province.name }));
+                });
+            });
+        }
+
+        function loadCities(selectId, provinceName) {
+            $.getJSON('json/china.json', function(data) {
+                $(selectId).empty().append('<option value="">请选择市</option>');
+                $.each(data, function(index, province) {
+                    if (province.name === provinceName) {
+                        $.each(province.cities, function(index, city) {
+                            $(selectId).append($('<option>', { value: city.name, text: city.name }));
+                        });
+                    }
+                });
+            });
+        }
+
+        function loadAreas(selectId, cityName) {
+            $.getJSON('json/china.json', function(data) {
+                var selectedProvince = $('#addProvince').val();
+                $(selectId).empty().append('<option value="">请选择区</option>');
+                $.each(data, function(index, province) {
+                    if (province.name === selectedProvince) {
+                        $.each(province.cities, function(index, city) {
+                            if (city.name === cityName) {
+                                $.each(city.areas, function(index, area) {
+                                    $(selectId).append($('<option>', { value: area, text: area }));
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        function showEditModal(addressId, receiverName, tel, postalCode, province, city, area, info) {
+            $('#editAddressId').val(addressId);
+            $('#editReceiverName').val(receiverName);
+            $('#editBuyerTel').val(tel);
+            $('#editPostalCode').val(postalCode);
+            $('#editProvince').val(province).trigger('change');
+            setTimeout(function() {
+                $('#editCity').val(city).trigger('change');
+                setTimeout(function() {
+                    $('#editArea').val(area);
+                }, 500);
+            }, 500);
+            $('#editInfo').val(info);
             $('#editAddressModal').modal('show');
         }
 
@@ -58,29 +125,26 @@
             var city = $('#editCity').val();
             var area = $('#editArea').val();
             var info = $('#editInfo').val();
-            var accurateAddress = province + city + area + info;
 
             $.ajax({
                 url: 'updateAddressServlet',
                 type: 'POST',
                 data: {
                     user_address_id: addressId,
+                    receiver_name: receiverName,
+                    tel: buyerTel,
+                    postal_code: postalCode,
                     province: province,
                     city: city,
                     area: area,
-                    info: info,
-                    receiver_name: receiverName,
-                    tel: buyerTel,
-                    postal_code: postalCode
+                    info: info
                 },
                 success: function(response) {
                     if (response == 1) {
                         alert('地址更新成功');
                         location.reload();
-                    } else if (response == 0) {
+                    } else {
                         alert('地址更新失败');
-                    } else if (response == -1) {
-                        alert('数据库错误');
                     }
                 },
                 error: function() {
@@ -89,20 +153,18 @@
             });
         }
 
-        function deleteAddress(addressId) {
+        function deleteAddress(addressId,uid) {
             if (confirm('确定要删除这个地址吗？')) {
                 $.ajax({
                     url: 'deleteAddressServlet',
                     type: 'POST',
-                    data: { user_address_id: addressId },
+                    data: { user_address_id: addressId, uid: uid },
                     success: function(response) {
                         if (response == 1) {
                             alert('地址删除成功');
                             location.reload();
-                        } else if (response == 0) {
+                        } else {
                             alert('地址删除失败');
-                        } else if (response == -1) {
-                            alert('数据库错误');
                         }
                     },
                     error: function() {
@@ -111,33 +173,62 @@
                 });
             }
         }
+
+        function addAddress() {
+            var receiverName = $('#addReceiverName').val();
+            var buyerTel = $('#addBuyerTel').val();
+            var postalCode = $('#addPostalCode').val();
+            var province = $('#addProvince').val();
+            var city = $('#addCity').val();
+            var area = $('#addArea').val();
+            var info = $('#addInfo').val();
+
+            $.ajax({
+                url: 'addAddressServlet',
+                type: 'POST',
+                data: {
+                    receiver_name: receiverName,
+                    tel: buyerTel,
+                    postal_code: postalCode,
+                    province: province,
+                    city: city,
+                    area: area,
+                    info: info
+                },
+                success: function(response) {
+                    if (response == 1) {
+                        alert('地址添加成功');
+                        location.reload();
+                    } else {
+                        alert('地址添加失败');
+                    }
+                },
+                error: function() {
+                    alert('请求失败');
+                }
+            });
+        }
     </script>
 </head>
 <body>
 <div class="container">
-<%--    /**--%>
-<%--    * 是一个基本上可以独立运行的页面，从session中拿loggedUser--%>
-<%--    * 用于管理用户地址--%>
-<%--    * @param address--%>
-<%--    */--%>
     <h2>管理收货地址</h2>
     <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModal">新增地址</button>
     <div class="address-list">
-        <c:forEach var="address" items="${addressList}">
-            <div class="address-row">
-                <div>
-                    <strong>${address.receiver_name}</strong><br>
-                        ${address.province} ${address.city} ${address.area} ${address.info}<br>
-                        ${address.tel} <br>
-                        ${address.postal_code}
-                </div>
-                <div class="address-actions">
-                    <button class="btn btn-sm btn-warning" onclick='showEditModal(${address})'>编辑</button>
-                    <button class="btn btn-sm btn-danger" onclick='deleteAddress(${address.user_address_id})'>删除</button>
-                </div>
-                <div style="clear: both;"></div>
+        <% for (Address address : addressList) { %>
+        <div class="address-row">
+            <div>
+                收货人：<strong><%= address.getReceiver_name() %></strong><br>
+                地址：<%= address.getProvince() %> <%= address.getCity() %> <%= address.getArea() %> <%= address.getInfo() %><br>
+                联系方式：<%= address.getTel() %><br>
             </div>
-        </c:forEach>
+            <div class="address-actions">
+                <button class="btn btn-sm btn-warning" onclick='showEditModal("<%= address.getUser_address_id() %>", "<%= address.getReceiver_name() %>", "<%= address.getTel() %>", "<%= address.getPostal_code() %>", "<%= address.getProvince() %>", "<%= address.getCity() %>", "<%= address.getArea() %>", "<%= address.getInfo() %>")'>编辑</button>
+                <button class="btn btn-sm btn-danger" onclick='deleteAddress(<%= address.getUser_address_id() %>,<%=address.getUid()%>)'>删除</button>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <% } %>
     </div>
 </div>
 
@@ -167,27 +258,24 @@
                 </div>
                 <div class="form-group">
                     <label for="editProvince">省</label>
-                    <select class="form-control" id="editProvince" required>
-                        <!-- Add options for provinces -->
-                    </select>
+                    <select class="form-control" id="editProvince" required></select>
                 </div>
                 <div class="form-group">
                     <label for="editCity">市</label>
-                    <select class="form-control" id="editCity" required>
-                        <!-- Add options for cities -->
-                    </select>
+                    <select class="form-control" id="editCity" required></select>
                 </div>
                 <div class="form-group">
                     <label for="editArea">区</label>
-                    <select class="form-control" id="editArea" required>
-                        <!-- Add options for areas -->
-                    </select>
+                    <select class="form-control" id="editArea" required></select>
                 </div>
                 <div class="form-group">
                     <label for="editInfo">详细地址</label>
-                    <input type="text" class="form-control" id="editInfo" required>
+                    <textarea class="form-control" id="editInfo" required></textarea>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="updateAddress()">确认修改</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="updateAddress()">保存修改</button>
             </div>
         </div>
     </div>
@@ -218,36 +306,27 @@
                 </div>
                 <div class="form-group">
                     <label for="addProvince">省</label>
-                    <select class="form-control" id="addProvince" required>
-                        <!-- Add options for provinces -->
-                    </select>
+                    <select class="form-control" id="addProvince" required></select>
                 </div>
                 <div class="form-group">
                     <label for="addCity">市</label>
-                    <select class="form-control" id="addCity" required>
-                        <!-- Add options for cities -->
-                    </select>
+                    <select class="form-control" id="addCity" required></select>
                 </div>
                 <div class="form-group">
                     <label for="addArea">区</label>
-                    <select class="form-control" id="addArea" required>
-                        <!-- Add options for areas -->
-                    </select>
+                    <select class="form-control" id="addArea" required></select>
                 </div>
                 <div class="form-group">
                     <label for="addInfo">详细地址</label>
-                    <input type="text" class="form-control" id="addInfo" required>
+                    <textarea class="form-control" id="addInfo" required></textarea>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="addAddress()">提交</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="addAddress()">保存地址</button>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    // Populate provinces, cities, and areas dynamically
-    // Add your logic here to load the options dynamically
-</script>
 </body>
 </html>

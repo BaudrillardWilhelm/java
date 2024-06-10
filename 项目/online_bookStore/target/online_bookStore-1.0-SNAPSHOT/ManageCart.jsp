@@ -126,11 +126,18 @@
                 }
             });
         }
+
+        function goToManageAddress() {
+            // 使用JavaScript的window.location对象来重定向到ManageAddress.jsp页面
+            window.location.href = "ManageAddress.jsp";
+        }
     </script>
 </head>
 <body>
 <div class="container">
     <h2>购物车信息</h2>
+    <a href="ManageAddress.jsp">管理地址</a>
+    <button onclick="goToManageAddress()">管理地址</button>
     <% if (cartList.isEmpty()) { %>
     <hr>
     <h3>尚未添加任何产品到购物车！！！</h3>

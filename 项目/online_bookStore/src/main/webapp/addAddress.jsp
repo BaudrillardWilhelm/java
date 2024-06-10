@@ -22,6 +22,65 @@
         }
     </style>
     <script>
+        $(document).ready(function() {
+            // Load the province, city, and area options
+            $.getJSON('json/china.json', function(data) {
+                $.each(data, function(index, province) {
+                    $('#province').append($('<option>', {
+                        value: province.name,
+                        text: province.name
+                    }));
+                });
+
+                // When province is selected, load the cities
+                $('#province').change(function() {
+                    var selectedProvince = $(this).val();
+                    $('#city').empty().append($('<option>', {
+                        value: '',
+                        text: '请选择市'
+                    }));
+                    $('#area').empty().append($('<option>', {
+                        value: '',
+                        text: '请选择区'
+                    }));
+                    $.each(data, function(index, province) {
+                        if (province.name === selectedProvince) {
+                            $.each(province.cities, function(index, city) {
+                                $('#city').append($('<option>', {
+                                    value: city.name,
+                                    text: city.name
+                                }));
+                            });
+                        }
+                    });
+                });
+
+                // When city is selected, load the areas
+                $('#city').change(function() {
+                    var selectedProvince = $('#province').val();
+                    var selectedCity = $(this).val();
+                    $('#area').empty().append($('<option>', {
+                        value: '',
+                        text: '请选择区'
+                    }));
+                    $.each(data, function(index, province) {
+                        if (province.name === selectedProvince) {
+                            $.each(province.cities, function(index, city) {
+                                if (city.name === selectedCity) {
+                                    $.each(city.areas, function(index, area) {
+                                        $('#area').append($('<option>', {
+                                            value: area,
+                                            text: area
+                                        }));
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        });
+
         function addAddress() {
             var province = $('#province').val();
             var city = $('#city').val();
@@ -30,24 +89,23 @@
             var receiverName = $('#receiverName').val();
             var buyerTel = $('#buyerTel').val();
             var postalCode = $('#postalCode').val();
-            var accurateAddress = province + city + area + info;
 
             $.ajax({
                 url: 'addAddressServlet',
                 type: 'POST',
                 data: {
-                    province:province,
-                    city:city,
-                    area:area,
-                    info:info,
+                    province: province,
+                    city: city,
+                    area: area,
+                    info: info,
                     receiverName: receiverName,
-                    buyerTel: buyerTel,
+                    tel: buyerTel,
                     postalCode: postalCode
                 },
                 success: function(response) {
                     if (response == 1) {
                         alert('地址添加成功');
-                        window.location.href = 'OneOrderConfirm.jsp';
+                        location.reload();
                     } else if (response == 0) {
                         alert('地址添加失败');
                     } else if (response == -1) {
@@ -80,19 +138,19 @@
         <div class="form-group">
             <label for="province">省</label>
             <select class="form-control" id="province" required>
-                <!-- Add options for provinces -->
+                <option value="">请选择省</option>
             </select>
         </div>
         <div class="form-group">
             <label for="city">市</label>
             <select class="form-control" id="city" required>
-                <!-- Add options for cities -->
+                <option value="">请选择市</option>
             </select>
         </div>
         <div class="form-group">
             <label for="area">区</label>
             <select class="form-control" id="area" required>
-                <!-- Add options for areas -->
+                <option value="">请选择区</option>
             </select>
         </div>
         <div class="form-group">

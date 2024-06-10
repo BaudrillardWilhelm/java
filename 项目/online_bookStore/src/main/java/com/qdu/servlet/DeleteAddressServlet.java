@@ -17,7 +17,8 @@ public class DeleteAddressServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             int addressId = Integer.parseInt(req.getParameter("user_address_id"));
-            int result = addressDao.removeAddress(addressId);
+            int uid = Integer.parseInt(req.getParameter("uid"));
+            int result = addressDao.removeAddress(uid,addressId);
 
             resp.getWriter().write(String.valueOf(result));
         } catch (Exception e) {

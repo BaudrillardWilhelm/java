@@ -54,7 +54,7 @@ public class OrderConfirmServlet extends HttpServlet
             Book_info book = bookDaoImpl.findBookById(bid);
 
             // 查找用户地址列表
-            List<Address> addressList = addressDaoImpl.findAddressListById(String.valueOf(uid));
+            List<Address> addressList = addressDaoImpl.findAddressListById(uid);
 
             if (addressList.isEmpty()) {
                 resp.sendRedirect("ManageAddress.jsp");

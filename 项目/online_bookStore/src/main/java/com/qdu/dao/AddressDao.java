@@ -5,5 +5,5 @@ import com.qdu.model.Book_info;
 import java.util.List;
 
 public interface AddressDao {
-    List<Address> findAddressListById(String bid);
+    List<Address> findAddressListById(int bid);
 }
