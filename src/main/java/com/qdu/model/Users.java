@@ -24,6 +24,10 @@ public class Users {
     public Users() {
     }
 
+    public Users(int uid) {
+        this.uid = uid;
+    }
+
     public Users(int uid, String uname, String upassword, String uquestion, String uanswer, String true_name, String gender, String tel, String e_mail, String career, String interest, String address, double money, Date registration_time) {
         this.uid = uid;
         this.uname = uname;

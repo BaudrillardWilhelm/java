@@ -12,9 +12,14 @@
     UserDaoImpl userDaoImpl = new UserDaoImpl();
     HttpSession session = request.getSession(false);
     Users loggedUser = (session != null) ? (Users) session.getAttribute("LoggedUser") : null;
+    if(null  == loggedUser)
+    {
+            response.sendRedirect("Userlogin.jsp");
+            return;
+    }
     String type_name = (String )request.getAttribute("type_name");
     CollectionDaoImpl collectionDao = new CollectionDaoImpl();
-    int uid = (session != null) ? loggedUser.getUid(): 0;
+    int uid = (loggedUser != null) ? loggedUser.getUid() : 0;
     List<Collection> collectionList = (session != null ) ? collectionDao.getCollectionsByUserId(uid) : null;
 %>
 <% Book_info book = (Book_info) request.getAttribute("bookInfo"); %>

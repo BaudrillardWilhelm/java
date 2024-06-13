@@ -84,7 +84,7 @@ public class OrderDaoImpl implements OrderDao {
         return orderList;
     }
 
-    public List<Order> getOrderListByBookName(String keyword) {
+    public List<Order> getOrderListByBookName(int uid,String keyword) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -92,8 +92,9 @@ public class OrderDaoImpl implements OrderDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("SELECT * FROM orders WHERE b_name like ? ORDER BY order_date DESC;");
-            ps.setString(1, "%"+keyword+"%");
+            ps = con.prepareStatement("SELECT * FROM orders WHERE b_name like ? and uid = ? ORDER BY order_date DESC;");
+            ps.setInt(1,uid);
+            ps.setString(2, "%"+keyword+"%");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -410,7 +411,7 @@ public class OrderDaoImpl implements OrderDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("SELECT * FROM orders WHERE uid = ? AND order_type = 1");
+            ps = con.prepareStatement("SELECT * FROM orders WHERE uid = ? AND order_type = 1;");
             ps.setInt(1, uid);
             rs = ps.executeQuery();
 
@@ -448,7 +449,7 @@ public class OrderDaoImpl implements OrderDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("SELECT * FROM orders WHERE uid = ? AND order_type = 0");
+            ps = con.prepareStatement("SELECT * FROM orders WHERE uid = ? AND order_type = 0;");
             ps.setInt(1, uid);
             rs = ps.executeQuery();
 

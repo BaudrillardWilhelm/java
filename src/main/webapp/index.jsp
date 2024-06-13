@@ -15,10 +15,9 @@
     InterestDaoImpl interestDao = new InterestDaoImpl();
 
     List<Book_info> bookList = new ArrayList<>();
-
     Users loggedUser=null;
 
-    if(null==session.getAttribute("LoggedUser")){
+    if(null == session.getAttribute("LoggedUser")){
         bookList = bookInfoDao.findTopRatedBooks();
     }else{
         loggedUser=(Users)session.getAttribute("LoggedUser");
@@ -95,7 +94,7 @@
         <a href="suars?uid=${LoggedUser.uid}">我的评论</a>
     </c:if>
     <c:if test="${LoggedUser == null}">
-        <a href="Userlogin.jsp.jsp">个人中心</a>
+        <a href="Userlogin.jsp">个人中心</a>
     </c:if>
     <c:if test="${LoggedUser != null}">
         <a href="UserManager.jsp">个人中心</a>
