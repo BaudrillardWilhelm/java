@@ -160,15 +160,17 @@ public class Book_infoDaoImpl implements Book_infoDao {
         return null;
     }
 
-    public List<Book_info> findBookByName(String keyword)
+    public List<Book_info> findBookByName(String keyword, int offset, int limit)
     {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Book_info where b_name like ?");
+            ps = con.prepareStatement("select * from Book_info where b_name like ?  LIMIT ? OFFSET ?;");
             ps.setString(1,"%"+keyword+"%");
+            ps.setInt(2,limit);
+            ps.setInt(3,offset);
             rs = ps.executeQuery();
             List<Book_info> book_info_name_list= new ArrayList<>();
             while (rs.next()) {
@@ -201,15 +203,17 @@ public class Book_infoDaoImpl implements Book_infoDao {
     }
 
 
-    public List<Book_info> findBookByAuhor(String keyword)
+    public List<Book_info> findBookByAuhor(String keyword, int offset, int limit)
     {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("select * from Book_info where author like ?");
+            ps = con.prepareStatement("select * from Book_info where author like ? LIMIT ? OFFSET ?;");
             ps.setString(1,"%"+keyword+"%");
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
             rs = ps.executeQuery();
             List<Book_info> book_info_name_list= new ArrayList<>();
             while (rs.next()) {
@@ -344,5 +348,51 @@ public class Book_infoDaoImpl implements Book_infoDao {
         }
         // 返回更新的行数，通常1表示成功更新了一行
         return flag;
+    }
+
+    public int countBooksByNameAsKeyword(String keyword)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            con = DatabaseUtil.getConnection();
+            String sql = "SELECT COUNT(*) AS total FROM book_info WHERE b_name like ? ;";
+            ps = con.prepareStatement(sql);
+            ps.setString(1,"%"+keyword+"%");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // 异常处理，可以根据需要抛出自定义异常或返回零等
+        }
+        return count;
+    }
+
+    public int countBooksByAuthorAsKeyword(String keyword)
+    {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            con = DatabaseUtil.getConnection();
+            String sql = "SELECT COUNT(*) AS total FROM book_info WHERE author like ? ;";
+            ps = con.prepareStatement(sql);
+            ps.setString(1,"%"+keyword+"%");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // 异常处理，可以根据需要抛出自定义异常或返回零等
+        }
+        return count;
     }
 }

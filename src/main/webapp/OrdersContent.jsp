@@ -89,7 +89,7 @@
                 已退货<br>
                 <% } %>
             </div>
-            <div class="cart-actions">
+            <div class="cart-actions justify-content: space-between;">
                 <button class="btn btn-sm btn-danger" onclick="showDeleteModal('<%= order.getOid() %>', '<%= order.getB_name() %>')">删除</button>
                 <% if (order.getOrder_type() == 0) { %>
                 <button class="btn btn-sm btn-danger" onclick="showReturnModal('<%= order.getUid() %>', '<%= order.getOid() %>')">退货</button>

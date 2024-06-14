@@ -46,9 +46,9 @@
     text-align: center;
 }
 
-form .form-control{
-    width: 60px!important;
-}
+/*form .form-control{*/
+/*    width: 200px!important;*/
+/*}*/
 
 .cartProduct{
     position: relative;

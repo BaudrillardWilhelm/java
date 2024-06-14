@@ -37,7 +37,5 @@ public class ClearCartServlet extends HttpServlet {
         } else {
             out.write("{\"status\": 0}");
         }
-        out.flush();
-        out.close();
     }
 }

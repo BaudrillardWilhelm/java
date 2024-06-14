@@ -14,8 +14,8 @@
     Users loggedUser = (session != null) ? (Users) session.getAttribute("LoggedUser") : null;
     if(null  == loggedUser)
     {
-            response.sendRedirect("Userlogin.jsp");
-            return;
+        response.sendRedirect("Userlogin.jsp");
+        return;
     }
     String type_name = (String )request.getAttribute("type_name");
     CollectionDaoImpl collectionDao = new CollectionDaoImpl();
@@ -30,15 +30,129 @@
     <link href="images/shortcut.png" rel="shortcut icon" type="image/x-icon"/>
     <title>详细信息</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/style.css"/>
     <script src="js/wangEditor.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
     <style>
+        .iframe-container {
+            margin-top: 30px; /* 调整 iframe 上边距 */
+        }
+
+        .iframe-content {
+            border: none; /* 去掉 iframe 边框 */
+            width: 100%;
+            height: 600px; /* 设置 iframe 高度 */
+        }
+        .logout{
+            top: 58px;
+            right: 195px;
+        }
+
+        .cartImg img{
+            width: 40px;
+            height: 40px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .book-img {
+            /*flex: 150px; !* 固定宽度 *!*/
+            /*height: 300px; !* 固定高度 *!*/
+            margin-right: 50px; /* 图片与信息之间的间距 */
+            margin-top: 50px; /* 上边距 */
+            margin-left: 90px; /* 左边距 */
+        }
+
+        .book-img img {
+            flex: 200px; /* 固定宽度 */
+            height: 450px; /* 固定高度 */
+            object-fit: contain; /* 保持图片比例并尽量填充 */
+            border-radius: 20px;
+        }
         img {
-            width: 50%;
+            width: 100%;
             height: 100%;
-            max-height: 200px;
             object-fit: cover;
+            border-radius: 10px;
+        }
+        .book-info {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            font-size: 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            display: inline-block;
+            margin-right: 10px;
+            width: 100px; /* 统一宽度 */
+            text-align: center;
+        }
+
+        .btn-cart, .btn-link, .btn-warning {
+            color: #fff;
+            border: none;
+        }
+
+        .btn-cart {
+            background-color: #f89406;
+        }
+
+        .btn-link {
+            background-color: #FFB300;
+        }
+
+        .btn-warning {
+            background-color: #f0ad4e;
+        }
+
+        .btn-action:hover {
+            background-color: #d97806;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .product-price {
+            color: #f89406;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .product-info {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #555;
+        }
+        .form-inline .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
         }
     </style>
     <script>
@@ -92,9 +206,6 @@
                         alert("加入购物车请求失败，请重试！");
                     }
                 });
-
-
-
             });
 
             // 收藏
@@ -110,7 +221,6 @@
                     },
                     success: function (response) {
                         if (response == 1) {
-                            alert("收藏成功！");
                             location.reload();
                         } else if (response == -1) {
                             alert("数据库报错，请重试！");
@@ -137,7 +247,6 @@
                     },
                     success: function (response) {
                         if (response == 1) {
-                            alert("已取消收藏！");
                             location.reload();
                         } else if (response == -1) {
                             alert("数据库报错，请重试！");
@@ -160,90 +269,71 @@
             });
         });
     </script>
-
-    <style>
-        .btn-link {
-            color: #fff;
-            background-color: #f89406;
-            border-color: #f89406;
-            padding: 6px 12px;
-            font-size: 14px;
-            line-height: 1.42857143;
-            border-radius: 3px;
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
-
-<h1 class="text-center text-primary">图书信息</h1>
-<hr>
-<br>
-
-<div class="content">
-    <br>
-
-    <img src="<%=book.getBImgpath()%>" alt="<%=book.getBName()%>"/>
-    <hr>
-    图书名称：<%=book.getBName()%> <br>
-    评分：<%=book.getRateNumber()%> <br>
-    作者：<%=book.getAuthor()%> <br>
-    入库时间：<%=book.getStorageTime()%> <br>
-    类型：<%=request.getAttribute("type_name")%> <br>
-    图书详情：<%=book.getBInfo()%> <br>
-    <p>图书单价： <fmt:formatNumber value="<%=book.getBPrice()%>" type="currency"/> </p> <br>
-    <p>剩余库存： <%=book.getBNum()%> </p> <br>
-    <p>折扣：<%=book.getDiscount()%></p> <br>
-    <p id="bookType">类型： <%=type_name%> </p>
-
-    <form class="form-inline">
-        <b>购买数量：</b>
-        <input type="number" min="1" name="qty" value="1" class="form-control">
-        <input type="hidden" name="bid" value="<%=book.getBid()%>">
-        <input type="hidden" name="b_price" value="<%=book.getBPrice()%>">
-        <br><br>
-        <button class="btn btn-sm btn-danger" id="btn_cart" >加入购物车</button>
-        <a href="#" class="btn-link" id="link_buy">立刻购买</a>
-        <% boolean collectionExisted = false;
-            if(collectionList != null )
-            {
-                for(Collection collection:collectionList)
-                {
-                    if(collection.getBid() == book.getBid())
-                    {
-                        collectionExisted = true;
-                    }
-                }
-            }
-        %>
-        <% if(collectionExisted){ %>
-            <button class="btn btn-sm btn-warning" id="btn_cancel_collect" type="button">已收藏</button>
-        <% }else{ %>
-            <button class="btn btn-sm btn-warning" id="btn_collect" type="button">收藏</button>
-        <% } %>
-    </form>
-</div>
-
-<br>
-<hr>
-<hr>
-
-<div class="container">
-    <h4 class="text-center text-primary">查看评论/发表评论</h4>
-    <hr>
-    <ul class="list">
-        <li><a href="sbars?uid=<%=loggedUser.getUid()%>&bid=<%=book.getBid()%>">1. 查看所有评论</a></li>
-        <li><a href="banrs?uid=<%=loggedUser.getUid()%>&bid=<%=book.getBid()%>">2. 发表新评论</a></li>
-    </ul>
-    <hr>
-</div>
-
 <a href="ManageCart.jsp" class="cartImg">
     查看购物车<img src="images/cart.png" alt="购物车"/>
 </a>
 <a href="los" class="logout">
     退出登录
 </a>
+<div class="container">
+    <h1 class="text-center text-primary">图书信息</h1>
+    <hr>
+    <br>
+
+    <div class="content">
+        <div class="book-img">
+            <img src="<%=book.getBImgpath()%>" alt="<%=book.getBName()%>"/>
+        </div>
+        <div class="book-info">
+            <p class="product-title"><%=book.getBName()%></p>
+            <p class="product-info"><b>评分：</b> <%=book.getRateNumber()%></p>
+            <p class="product-info"><b>作者：</b><%=book.getAuthor()%></p>
+            <p class="product-info"><b>入库时间：</b><%=book.getStorageTime()%></p>
+            <p class="product-info"><b>类型：</b><%=request.getAttribute("type_name")%></p>
+            <p class="product-info"><b>图书详情：</b><%=book.getBInfo()%></p>
+            <p class="product-price"><b>图书单价：</b> <fmt:formatNumber value="<%=book.getBPrice()%>" type="currency"/> </p>
+            <p class="product-info"><b>剩余库存：</b><%=book.getBNum()%></p>
+            <p class="product-info"><b>折扣：</b><%=book.getDiscount()%></p>
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label>购买数量：</label>
+                    <input type="number" min="1" name="qty" value="1" class="form-control">
+                </div>
+                <input type="hidden" name="bid" value="<%=book.getBid()%>">
+                <input type="hidden" name="b_price" value="<%=book.getBPrice()%>">
+                <br><br>
+                <button class="btn-action btn-cart" id="btn_cart">加入购物车</button>
+                <a href="#" class="btn-action btn-link" id="link_buy">立刻购买</a>
+                <% boolean collectionExisted = false;
+                    if(collectionList != null )
+                    {
+                        for(Collection collection:collectionList)
+                        {
+                            if(collection.getBid() == book.getBid())
+                            {
+                                collectionExisted = true;
+                            }
+                        }
+                    }
+                %>
+                <% if(collectionExisted){ %>
+                <button class="btn-action btn-warning" id="btn_cancel_collect" type="button">已收藏</button>
+                <% }else{ %>
+                <button class="btn-action btn-warning" id="btn_collect" type="button">收藏</button>
+                <% } %>
+            </form>
+
+        </div>
+    </div>
+</div>
+    <hr>
+    <iframe class="iframe-content" src="sbars?uid=<%=loggedUser.getUid()%>&bid=<%=book.getBid()%>"></iframe>
+
+
 
 </body>
 </html>
+

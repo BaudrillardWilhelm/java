@@ -32,6 +32,24 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <style>
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .cart-row {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-actions {
+            float: right;
+        }
+
+
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -62,12 +80,12 @@
                 type: 'POST',
                 data: {bid: bid},
                 success: function (response) {
-                    if (response.status == 1) {
-                        alert('删除成功');
+                    if (response == 1) {
+                        // alert('删除成功');
                         location.reload(true);
-                    } else if (response.status == 0) {
+                    } else if (response == 0) {
                         alert('删除失败');
-                    } else if (response.status == -1) {
+                    } else if (response== -1) {
                         alert('数据库错误');
                     }
                 },
@@ -143,10 +161,9 @@
     <h3>尚未添加任何产品到购物车！！！</h3>
     <% } else { %>
     <% for (ShoppingCart cart : cartList) { %>
-    <div class="cart-row">
-        <div>
-            <strong><%= cart.getBookName() %>
-            </strong><br>
+    <div class="cart-row card">
+        <div class="card-body">
+            <strong><%= cart.getBookName() %></strong><br>
             单价：<fmt:formatNumber value="<%= cart.getPrice() %>" type="currency"/><br>
             类型：<%= cart.getBookType() %><br>
             数量：
@@ -155,13 +172,14 @@
             <button class="btn btn-sm btn-primary" onclick="updateCart(<%= cart.getBid() %>)">更新数量</button>
             <br>
             总价：<fmt:formatNumber value="<%= cart.getSum() %>" type="currency"/>
+            <div class="cart-actions">
+                <button class="btn btn-sm btn-danger"
+                        onclick="showDeleteModal('<%= cart.getBid() %>', '<%= cart.getBookName() %>')">删除
+                </button>
+            </div>
+
         </div>
-        <div class="cart-actions">
-            <button class="btn btn-sm btn-danger"
-                    onclick="showDeleteModal('<%= cart.getBid() %>', '<%= cart.getBookName() %>')">删除
-            </button>
-        </div>
-        <div style="clear: both;"></div>
+
     </div>
     <% } %>
     <button class="btn btn-warning" onclick="showClearCartModal()">清空购物车</button>

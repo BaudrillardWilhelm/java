@@ -22,6 +22,7 @@ import java.util.List;
 @WebServlet("/suars")
 public class SearchUserAllRateServlet extends HttpServlet {
 
+    private static final int COMMENTS_PER_PAGE = 4;
     DiaryService diaryService=new DiaryServiceImpl();
     UserDaoImpl userDao = new UserDaoImpl();
     RateDaoImpl rateDaoImpl = new RateDaoImpl();
@@ -29,13 +30,26 @@ public class SearchUserAllRateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         int uid=Integer.parseInt(req.getParameter("uid"));
+        int page = req.getParameter("page") != null ? Integer.parseInt(req.getParameter("page")) : 1;
+
         Users user = userDao.findUserListById(uid);
+
+
+        int offset = (page - 1) * COMMENTS_PER_PAGE;
+        List<Rate> rateList = rateDaoImpl.findRateListByUidPaged(uid, offset, COMMENTS_PER_PAGE);
+        int totalComments = rateDaoImpl.countRatesByUid(uid);
+        int totalPages = (int) Math.ceil((double) totalComments / COMMENTS_PER_PAGE);
+
         //调用业务逻辑 ，完成请求处理
-        List<Rate> rateList = rateDaoImpl.findRateListByUserId(uid);
         //生成动态响应
+
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+
         req.setAttribute("uid",uid);
         req.setAttribute("rateList", rateList);
         req.setAttribute("loggedUser",user);
+        req.setAttribute("rateDaoImpl",rateDaoImpl);
         req.getRequestDispatcher("/UserRate_list_1.jsp").forward(req, resp);
     }
 }
