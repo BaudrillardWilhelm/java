@@ -269,19 +269,156 @@
             });
         });
     </script>
+    <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .navbar .logo-title {
+            display: flex;
+            align-items: center;
+        }
+        .webSitelogo {
+            height: 80px;
+            margin-right: 10px;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+            margin: 0;
+            color: #343a40;
+        }
+        .navbar a {
+            margin: 0 5px;
+            padding: 10px 5px;
+            text-decoration: none;
+            color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .smallLogo {
+            margin-right: 4px;
+            height: 40px;
+            width: 40px;
+        }
+        .line-form-input {
+            outline: 0 !important;
+            border: none;
+            display: block;
+            width: 50%;
+            padding: 1em 2em .4em .3em;
+            opacity: .8;
+            transition: .3s;
+            background: 0 0 !important;
+            border-bottom: 2px solid transparent; /* 初始状态下的下划线 */
+        }
+        .line-form-input:focus {
+            border-bottom: 2px solid blue; /* 获得焦点时的下划线 */
+        }
+        .navbar form {
+            display: flex;
+            align-items: center;
+        }
+        .navbar form select, .navbar form input, .navbar form button {
+            margin-left: 5px;
+        }
+        .navbar form button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .navbar form button:hover {
+            background-color: #0056b3;
+        }
+        .navbar form select {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+    <style>
+        .footer {
+            background-color: gray;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .footer p {
+            margin: 0;
+            color: #343a40;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-<a href="ManageCart.jsp" class="cartImg">
-    查看购物车<img src="images/cart.png" alt="购物车"/>
-</a>
-<a href="los" class="logout">
-    退出登录
-</a>
+<div class="navbar">
+    <div class="logo-title">
+        <img src="images/logo.png" alt="网上书店logo" class="webSitelogo">
+        <h1>欢迎来到网上书店，购尽好书！</h1>
+    </div>
+    <div>
+        <a href="Collection.jsp">
+            <img src="images/收藏.png" alt="" class="smallLogo">
+            收藏
+        </a>
+        <a href="ManageOrders.jsp">
+            <img src="images/订单.png" alt="" class="smallLogo">
+            订单
+        </a>
+        <% if(null == loggedUser) { %>
+        <a href="Userlogin.jsp">
+            <img src="images/评论区.png" alt="" class="smallLogo">
+            评论
+        </a>
+        <a href="Userlogin.jsp">
+            <img src="images/个人中心.png" alt="" class="smallLogo">
+            个人中心
+        </a>
+        <% }else{ %>
+        <a href="suars?uid=<%=loggedUser.getUid()%>">
+            <img src="images/评论区.png" alt="" class="smallLogo">
+            评论
+        </a>
+        <a href="UserManager.jsp">
+            <img src="images/个人中心.png" alt="" class="smallLogo">
+            <%=loggedUser.getUname()%>个人中心
+        </a>
+        <% } %>
+        <a href="ManageCart.jsp">
+            <img src="images/购物车.png" alt="" class="smallLogo">
+            购物车
+        </a>
+        <a href="LogoutServlet">
+            <img src="images/离开-1.png" alt="" class="smallLogo">
+            退出
+        </a>
+    </div>
+    <form action="SearchBooksServlet" method="get">
+        <select name="searchType" class="form-control">
+            <option value="name">按书名搜索</option>
+            <option value="author">按作者搜索</option>
+        </select>
+        <input type="text" name="keyword" placeholder="搜索书籍..." class="line-form-input">
+        <button type="submit" class="btn btn-primary">搜索</button>
+    </form>
+</div>
 <div class="container">
-    <h1 class="text-center text-primary">图书信息</h1>
-    <hr>
-    <br>
-
     <div class="content">
         <div class="book-img">
             <img src="<%=book.getBImgpath()%>" alt="<%=book.getBName()%>"/>
@@ -333,7 +470,10 @@
     <iframe class="iframe-content" src="sbars?uid=<%=loggedUser.getUid()%>&bid=<%=book.getBid()%>"></iframe>
 
 
-
+<div class="footer">
+    <p>&copy; 2024 网上书店. 保留所有权利.</p>
+    <p>开发人员：董守昱，刘依洋，袁淇浩</p>
+</div>
 </body>
 </html>
 

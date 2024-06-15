@@ -109,7 +109,7 @@ public class CollectionDaoImpl implements CollectionDao {
 
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("DELETE FROM collection WHERE uid = ?");
+            ps = con.prepareStatement("DELETE FROM collection WHERE uid = ?;");
             ps.setInt(1, uid);
             rowsAffected = ps.executeUpdate();
         } catch (SQLException ex) {

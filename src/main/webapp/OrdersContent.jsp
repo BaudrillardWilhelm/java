@@ -61,46 +61,95 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </head>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+        background-image: url("images/Bookbackground.png");
+        background: no-repeat center center;
+        background-size: cover;
+    }
+    .container {
+        margin-top: 50px;
+    }
+    .card {
+        border: none;
+        margin-bottom: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 0 90px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    .card-title {
+        font-size: 1.5rem;
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+    .card-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+    .card-text {
+        font-size: 1rem;
+        color: #212529;
+        margin-bottom: 0.5rem;
+    }
+    .btn-sm {
+        margin-top: 0.5rem;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+    .cart-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .cart-row {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+</head>
 <body>
 <div class="container">
     <div id="orderList">
         <% if (orderList.isEmpty()) { %>
-        <hr>
-        <h3>没有符合条件的订单!</h3>
+        <div class="card">
+            <h3>没有符合条件的订单!</h3>
+        </div>
         <% } else { %>
         <% for (Order order : orderList) { %>
-        <div class="cart-row">
-            <hr>
-            <div>
-                <strong><%= order.getB_name() %></strong><br>
-                订单编号：<%= order.getOid() %><br>
-                收货人姓名：<%= order.getReceiver_name() %><br>
-                客户联系方式：<%= order.getBuyer_tel() %><br>
-                邮政编码：<%= order.getPostal_code() %><br>
-                收货地址：<%= order.getBuyer_address() %><br>
-                下单日期：<%= order.getOrder_date() %><br>
-                数量：<input type="number" id="qty-<%= order.getBook_num() %>" value="<%= order.getBook_num() %>" min="1" style="width: 50px;" readonly><br>
-                总价：<%= new java.text.DecimalFormat("￥#,##0.00").format(order.getSum_price()) %><br>
-                状态：<% if(order.getOrder_type() == 1){ %>
-                已送达<br>
-                <% }else if(order.getOrder_type() == 0){ %>
-                运输中<br>
-                <% }else if(order.getOrder_type() == -1){ %>
-                已退货<br>
-                <% } %>
+        <div class="card cart-row">
+            <div class="card-body">
+                <h5 class="card-title"><%= order.getB_name() %></h5>
+                <p class="card-text">订单编号：<%= order.getOid() %></p>
+                <p class="card-text">收货人姓名：<%= order.getReceiver_name() %></p>
+                <p class="card-text">客户联系方式：<%= order.getBuyer_tel() %></p>
+                <p class="card-text">邮政编码：<%= order.getPostal_code() %></p>
+                <p class="card-text">收货地址：<%= order.getBuyer_address() %></p>
+                <p class="card-text">下单日期：<%= order.getOrder_date() %></p>
+                <p class="card-text">数量：<input type="number" id="qty-<%= order.getBook_num() %>" value="<%= order.getBook_num() %>" min="1" style="width: 50px;" readonly></p>
+                <p class="card-text">总价：<%= new java.text.DecimalFormat("￥#,##0.00").format(order.getSum_price()) %></p>
+                <p class="card-text">状态：<% if(order.getOrder_type() == 1){ %>已送达<% }else if(order.getOrder_type() == 0){ %>运输中<% }else if(order.getOrder_type() == -1){ %>已退货<% } %></p>
+                <div class="cart-actions">
+                    <button class="btn btn-sm btn-danger" onclick="showDeleteModal('<%= order.getOid() %>', '<%= order.getB_name() %>')">删除</button>
+                    <% if (order.getOrder_type() == 0) { %>
+                    <button class="btn btn-sm btn-danger" onclick="showReturnModal('<%= order.getUid() %>', '<%= order.getOid() %>')">退货</button>
+                    <button class="btn btn-sm btn-danger" onclick="showConfirmReceivedModal('<%= order.getUid() %>', '<%= order.getOid() %>')">确认收货</button>
+                    <% } %>
+                </div>
             </div>
-            <div class="cart-actions justify-content: space-between;">
-                <button class="btn btn-sm btn-danger" onclick="showDeleteModal('<%= order.getOid() %>', '<%= order.getB_name() %>')">删除</button>
-                <% if (order.getOrder_type() == 0) { %>
-                <button class="btn btn-sm btn-danger" onclick="showReturnModal('<%= order.getUid() %>', '<%= order.getOid() %>')">退货</button>
-                <button class="btn btn-sm btn-danger" onclick="showConfirmReceivedModal('<%= order.getUid() %>', '<%= order.getOid() %>')">确认收货</button>
-                <hr>
-                <% } %>
-            </div>
-            <div style="clear: both;"></div>
         </div>
         <% } %>
-        <button class="btn btn-warning" onclick="showClearCartModal()">清空订单</button>
         <% } %>
     </div>
 </div>

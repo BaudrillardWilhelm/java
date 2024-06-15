@@ -295,7 +295,7 @@ public class Book_infoDaoImpl implements Book_infoDao {
         List<Book_info> book_infoList=new ArrayList();
         try {
             con = DatabaseUtil.getConnection();
-            ps = con.prepareStatement("SELECT *   FROM Book_info   ORDER BY rate_number DESC   LIMIT 6;");
+            ps = con.prepareStatement("SELECT *   FROM Book_info   ORDER BY rate_number DESC   LIMIT 10;");
             rs = ps.executeQuery();
 
             while (rs.next()) {

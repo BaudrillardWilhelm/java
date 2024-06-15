@@ -46,7 +46,7 @@
 
         .book-img img {
             width: 200px;
-            height: 240px;
+            height: 250px;
             object-fit: cover;
             border-radius: 20px;
             padding-left: 10px;
