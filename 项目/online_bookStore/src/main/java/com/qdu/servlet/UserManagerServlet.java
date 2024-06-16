@@ -2,6 +2,7 @@ package com.qdu.servlet;
 
 import com.google.gson.Gson;
 import com.qdu.dao.InterestDao;
+import com.qdu.dao.UserDao;
 import com.qdu.dao.impl.InterestDaoImpl;
 import com.qdu.dao.impl.UserDaoImpl;
 import com.qdu.model.Interest;
@@ -24,22 +25,38 @@ public class UserManagerServlet  extends HttpServlet {
         // 设置响应内容类型为JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
+        UserDao uo = new UserDaoImpl();
         // 从会话中获取用户数据
         HttpSession session = request.getSession(false); // 如果会话不存在，则返回null
         if (session != null) {
             Users user = (Users) session.getAttribute("LoggedUser");
             InterestDao io = new InterestDaoImpl();
             List<Interest>receive = io.findInterestListByUid(user.getUid());
-            Map<String,Boolean>receiveBack = new HashMap<>();
-            for(int i = 0;i<receive.size();i++)
+            String[] temper = {"a","b","c","d","e","f","g","h","i","j","k","l","m"};
+            Map<String,Object> resultMap = new HashMap<>();
+            for(int i = 1;i<=13;i++)
             {
-                receiveBack.put(receive.get(i).getType_name(),true);
+                if(!receive.isEmpty())
+                {
+                    if(receive.get(0).getType_id() == i)
+                    {
+                        resultMap.put(temper[i-1],true );
+                        receive.remove(0);
+                    }
+                    else
+                    {
+                        resultMap.put(temper[i-1],false );
+                    }
+                }
+                else
+                {
+                    resultMap.put(temper[i-1],false );
+                }
+
             }
             if (user != null) {
                 // 将用户数据转换为JSON并写入响应
                 try {
-                    Map<String,Object> resultMap = new HashMap<>();
                     resultMap.put("Uid",user.getUid());
                     resultMap.put("Uname",user.getUname());
                     resultMap.put("Upassword",user.getUpassword());
@@ -47,12 +64,11 @@ public class UserManagerServlet  extends HttpServlet {
                     resultMap.put("uanswer",user.getUanswer());
                     resultMap.put("true_name",user.getTrue_name());
                     resultMap.put("gender",user.getGender());
-                    resultMap.put("tel",user.getTel());
+                    resultMap.put("Tel",user.getTel());
                     resultMap.put("e_mail",user.getE_mail());
                     resultMap.put("career",user.getCareer());
-                    resultMap.put("interest",receiveBack);
                     resultMap.put("address",user.getAddress());
-                    resultMap.put("money",user.getMoney());
+                    resultMap.put("money",uo.GetMoney(String.valueOf(user.getUid())));
                     resultMap.put("registration_time",user.getRegistration_time());
                     Gson gson = new Gson();
                     String result = gson.toJson(resultMap);

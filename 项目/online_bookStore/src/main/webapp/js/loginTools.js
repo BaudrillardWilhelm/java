@@ -16,7 +16,7 @@ function upLoadAll()
             {
                 if(data.isLogin==true)
                 {
-                    window.location.href="index.jsp";
+
                 }
                 else
                 {

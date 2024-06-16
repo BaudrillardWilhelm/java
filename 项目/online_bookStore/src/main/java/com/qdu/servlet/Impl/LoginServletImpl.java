@@ -30,10 +30,10 @@ public class LoginServletImpl extends HttpServlet implements LoginServlet {
         UserDaoImpl uo = new UserDaoImpl();
         Users user = uo.GetInformationByidAndPassword(uname, pwd);
         Map<String,Object>resultMap = new HashMap<>();
-        boolean flag = MD5.getMD5Hash(pwd).equals(MD5.getMD5Hash(user.getUpassword()));
-        if(user != null&&flag)
+        if(user != null)
         {
-            resultMap.put("isLogin",true);
+            boolean flag = MD5.getMD5Hash(pwd).equals(MD5.getMD5Hash(user.getUpassword()));
+            //resultMap.put("isLogin",true);
             Login_if.getInstance().setIfLogin(true);
 
             HttpSession session = request.getSession();
@@ -41,6 +41,7 @@ public class LoginServletImpl extends HttpServlet implements LoginServlet {
 
             Cookie cookie = new Cookie("JSESSIONID",session.getId());
             response.addCookie(cookie);
+            response.sendRedirect("index.jsp");
 
         }
         else

@@ -287,6 +287,192 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public void ChangePassword(String uid, String password) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set upassword=? where  uid=?");
+            ps.setString(1, password);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeQuestion(String uid, String Question) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set uquestion=? where  uid=?");
+            ps.setString(1, Question);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeAnswer(String uid, String Answer) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set uanswer=? where  uid=?");
+            ps.setString(1, Answer);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeTrue_name(String uid, String True_name) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set true_name=? where  uid=?");
+            ps.setString(1, True_name);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeTel(String uid, String Tel) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set tel=? where  uid=?");
+            ps.setString(1, Tel);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeE_mail(String uid, String E_mail) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set Email=? where  uid=?");
+            ps.setString(1, E_mail);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeCareer(String uid, String Career) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set career=? where  uid=?");
+            ps.setString(1, Career);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeAddress(String uid, String Address) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set address=? where  uid=?");
+            ps.setString(1, Address);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public void ChangeMoney(String uid, String money) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("update users set money=? where  uid=?");
+            ps.setString(1, money);
+            ps.setString(2, uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+        }
+    }
+
+    @Override
+    public String GetMoney(String uid) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String Back = null;
+        try {
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("select money  from users where uid=?");
+            ps.setString(1, uid);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Back = String.valueOf(rs.getDouble(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.close(rs, ps, con);
+            return Back;
+        }
+    }
+
     public void updateUser(Users loggedUser) {
         Connection con = null;
         PreparedStatement ps = null;

@@ -27,15 +27,15 @@ public class InterestDaoImpl implements InterestDao {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        List<Interest> list=null;
+        List<Interest> list=new ArrayList<>();
         try {
             con = DatabaseUtil.getConnection();
             ps = con.prepareStatement("select * from interest where uid = ?");
             ps.setInt(1,uid);
             rs = ps.executeQuery();
-
+            Interest interest = new Interest();
             while (rs.next()) {
-                Interest interest = new Interest(
+                interest = new Interest(
                         rs.getInt(1),      // 假设列名是"interest_id"，对应于uid
                         rs.getString(2), // 假设列名是"type_name_column"，对应于type_name
                         rs.getInt(3)
@@ -49,6 +49,23 @@ public class InterestDaoImpl implements InterestDao {
             DatabaseUtil.close(rs,ps,con);
         }
         return null;
+    }
+
+    @Override
+    public void EarseAllInterestByUid(int uid) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            con = DatabaseUtil.getConnection();
+            ps = con.prepareStatement("DELETE FROM interest WHERE uid = ?");
+            ps.setInt(1,uid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            DatabaseUtil.close(rs,ps,con);
+        }
     }
 
     public String  findInterestChineseNameByUid(int uid,int type_id)

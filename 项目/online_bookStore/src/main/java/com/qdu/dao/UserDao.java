@@ -15,5 +15,15 @@ public interface UserDao {
     boolean PushNewUser(Users in);//向数据库中添加新用户
     boolean HavePhone(String in);//检测该手机号是否注册过
     int GetUidByUnameAndUpassword(String uname,String upassword);
+    void ChangePassword(String uid,String password);
+    void ChangeQuestion(String uid,String Question);
+    void ChangeAnswer(String uid,String Answer);
+    void ChangeTrue_name(String uid,String True_name);
+    void ChangeTel(String uid,String Tel);
+    void ChangeE_mail(String uid,String E_mail);
+    void ChangeCareer(String uid,String Career);
+    void ChangeAddress(String uid,String Address);
+    void ChangeMoney(String uid,String money);
+    String GetMoney(String uid);
 }
 

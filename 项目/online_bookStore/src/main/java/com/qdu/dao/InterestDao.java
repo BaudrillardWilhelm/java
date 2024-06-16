@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface InterestDao {
     List<Interest> findInterestListByUid(int uid);
+    void EarseAllInterestByUid(int uid);
 }
